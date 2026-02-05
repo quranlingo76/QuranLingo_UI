@@ -1,0 +1,7 @@
+{
+  "name": "QURANLINGO UI",
+  "description": "A high-ROI, frequency-based curriculum designed to decode Quranic structure through patterns and roots.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
