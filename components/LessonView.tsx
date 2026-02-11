@@ -1,5 +1,5 @@
 
-import React, { useReducer, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, CheckCircle, AlertCircle, Volume2, Sparkles, Loader2, Brain, ArrowRight, Star, Tag, LayoutPanelLeft, Bot, Zap, BookOpen, Bookmark, ArrowLeft, User, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { LevelNode, ParsedWord, Question, MasteryData } from '../config/types';
@@ -25,119 +25,7 @@ interface LessonViewProps {
 
 type ViewState = 'intro' | 'quiz' | 'summary';
 
-// ── Reducer State & Actions ──────────────────────────────────────────────
-interface LessonState {
-  viewState: ViewState;
-  currentQuestionIndex: number;
-  selectedOption: string | null;
-  sentenceTokens: string[];
-  builtSentence: string[];
-  isChecking: boolean;
-  feedback: 'correct' | 'incorrect' | null;
-  correctAnswer: string;
-  mistakeShake: boolean;
-  aiExplanation: string | null;
-  isLoadingAi: boolean;
-  isTutorOpen: boolean;
-  tutorWord: ParsedWord | null;
-  isPlayingAudio: boolean;
-  introStep: number;
-}
 
-type LessonAction =
-  | { type: 'SET_VIEW_STATE'; payload: ViewState }
-  | { type: 'SET_QUESTION_INDEX'; payload: number }
-  | { type: 'SELECT_OPTION'; payload: string | null }
-  | { type: 'SET_SENTENCE_TOKENS'; payload: string[] }
-  | { type: 'SET_BUILT_SENTENCE'; payload: string[] }
-  | { type: 'ADD_TO_SENTENCE'; payload: string }
-  | { type: 'REMOVE_FROM_SENTENCE'; payload: { index: number; token: string } }
-  | { type: 'ADD_TO_TOKENS'; payload: string }
-  | { type: 'REMOVE_FROM_TOKENS'; payload: { index: number; token: string } }
-  | { type: 'START_CHECK' }
-  | { type: 'SET_FEEDBACK_CORRECT' }
-  | { type: 'SET_FEEDBACK_INCORRECT'; payload: { correctAnswer: string } }
-  | { type: 'SET_MISTAKE_SHAKE'; payload: boolean }
-  | { type: 'SET_AI_EXPLANATION'; payload: string | null }
-  | { type: 'SET_LOADING_AI'; payload: boolean }
-  | { type: 'OPEN_TUTOR'; payload: ParsedWord }
-  | { type: 'CLOSE_TUTOR' }
-  | { type: 'SET_PLAYING_AUDIO'; payload: boolean }
-  | { type: 'SET_INTRO_STEP'; payload: number }
-  | { type: 'INCREMENT_INTRO_STEP' }
-  | { type: 'DECREMENT_INTRO_STEP' }
-  | { type: 'NEXT_QUESTION' }
-  | { type: 'RESET_QUESTION' };
-
-function lessonReducer(state: LessonState, action: LessonAction): LessonState {
-  switch (action.type) {
-    case 'SET_VIEW_STATE':
-      return { ...state, viewState: action.payload };
-    case 'SET_QUESTION_INDEX':
-      return { ...state, currentQuestionIndex: action.payload };
-    case 'SELECT_OPTION':
-      return { ...state, selectedOption: action.payload };
-    case 'SET_SENTENCE_TOKENS':
-      return { ...state, sentenceTokens: action.payload };
-    case 'SET_BUILT_SENTENCE':
-      return { ...state, builtSentence: action.payload };
-    case 'ADD_TO_SENTENCE':
-      return { ...state, builtSentence: [...state.builtSentence, action.payload] };
-    case 'REMOVE_FROM_SENTENCE':
-      return {
-        ...state,
-        builtSentence: state.builtSentence.filter((_, i) => i !== action.payload.index),
-        sentenceTokens: [...state.sentenceTokens, action.payload.token],
-      };
-    case 'ADD_TO_TOKENS':
-      return { ...state, sentenceTokens: [...state.sentenceTokens, action.payload] };
-    case 'REMOVE_FROM_TOKENS':
-      return {
-        ...state,
-        sentenceTokens: state.sentenceTokens.filter((_, i) => i !== action.payload.index),
-        builtSentence: [...state.builtSentence, action.payload.token],
-      };
-    case 'START_CHECK':
-      return { ...state, isChecking: true };
-    case 'SET_FEEDBACK_CORRECT':
-      return { ...state, feedback: 'correct' };
-    case 'SET_FEEDBACK_INCORRECT':
-      return { ...state, feedback: 'incorrect', correctAnswer: action.payload.correctAnswer, mistakeShake: true };
-    case 'SET_MISTAKE_SHAKE':
-      return { ...state, mistakeShake: action.payload };
-    case 'SET_AI_EXPLANATION':
-      return { ...state, aiExplanation: action.payload };
-    case 'SET_LOADING_AI':
-      return { ...state, isLoadingAi: action.payload };
-    case 'OPEN_TUTOR':
-      return { ...state, isTutorOpen: true, tutorWord: action.payload };
-    case 'CLOSE_TUTOR':
-      return { ...state, isTutorOpen: false };
-    case 'SET_PLAYING_AUDIO':
-      return { ...state, isPlayingAudio: action.payload };
-    case 'SET_INTRO_STEP':
-      return { ...state, introStep: action.payload };
-    case 'INCREMENT_INTRO_STEP':
-      return { ...state, introStep: state.introStep + 1 };
-    case 'DECREMENT_INTRO_STEP':
-      return { ...state, introStep: state.introStep - 1 };
-    case 'NEXT_QUESTION':
-      return { ...state, currentQuestionIndex: state.currentQuestionIndex + 1 };
-    case 'RESET_QUESTION':
-      return {
-        ...state,
-        feedback: null,
-        isChecking: false,
-        selectedOption: null,
-        correctAnswer: '',
-        aiExplanation: null,
-        builtSentence: [],
-        sentenceTokens: [],
-      };
-    default:
-      return state;
-  }
-}
 
 function getInitialIntroStep(levelId: string): number {
   const saved = localStorage.getItem(`lesson_progress_${levelId}`);
@@ -148,29 +36,21 @@ const LessonView: React.FC<LessonViewProps> = ({ level, onComplete, onExit, word
   const navigate = useNavigate();
   const { language } = useLanguage();
 
-  const [state, dispatch] = useReducer(lessonReducer, {
-    viewState: 'intro',
-    currentQuestionIndex: 0,
-    selectedOption: null,
-    sentenceTokens: [],
-    builtSentence: [],
-    isChecking: false,
-    feedback: null,
-    correctAnswer: '',
-    mistakeShake: false,
-    aiExplanation: null,
-    isLoadingAi: false,
-    isTutorOpen: false,
-    tutorWord: null,
-    isPlayingAudio: false,
-    introStep: getInitialIntroStep(level.id),
-  });
-
-  const {
-    viewState, currentQuestionIndex, selectedOption, sentenceTokens,
-    builtSentence, isChecking, feedback, correctAnswer, mistakeShake,
-    aiExplanation, isLoadingAi, isTutorOpen, tutorWord, isPlayingAudio, introStep,
-  } = state;
+  const [viewState, setViewState] = useState<ViewState>('intro');
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [sentenceTokens, setSentenceTokens] = useState<string[]>([]);
+  const [builtSentence, setBuiltSentence] = useState<string[]>([]);
+  const [isChecking, setIsChecking] = useState(false);
+  const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
+  const [correctAnswer, setCorrectAnswer] = useState('');
+  const [mistakeShake, setMistakeShake] = useState(false);
+  const [aiExplanation, setAiExplanation] = useState<string | null>(null);
+  const [isLoadingAi, setIsLoadingAi] = useState(false);
+  const [isTutorOpen, setIsTutorOpen] = useState(false);
+  const [tutorWord, setTutorWord] = useState<ParsedWord | null>(null);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [introStep, setIntroStep] = useState(() => getInitialIntroStep(level.id));
 
   const sliderRef = useRef<Slider>(null);
 
@@ -279,35 +159,35 @@ const LessonView: React.FC<LessonViewProps> = ({ level, onComplete, onExit, word
   useEffect(() => {
     if (isBuilder && currentQuestion) {
         const tokens = currentQuestion.word.arabic.split(' ').filter(t => t.trim() !== '');
-        dispatch({ type: 'SET_SENTENCE_TOKENS', payload: shuffleArray(tokens) });
-        dispatch({ type: 'SET_BUILT_SENTENCE', payload: [] });
+        setSentenceTokens(shuffleArray(tokens));
+        setBuiltSentence([]);
     }
   }, [currentQuestionIndex, isBuilder, currentQuestion]);
 
   const handlePlayAudio = async (text: string) => {
     if (!text || isPlayingAudio) return;
     
-    dispatch({ type: 'SET_PLAYING_AUDIO', payload: true });
+    setIsPlayingAudio(true);
     try {
       // Pass the level ID so the audio service knows which folder to look in
       await playArabicText(text, level.id);
-      dispatch({ type: 'SET_PLAYING_AUDIO', payload: false });
+      setIsPlayingAudio(false);
     } catch (e) {
       console.error('Audio playback error:', e);
-      dispatch({ type: 'SET_PLAYING_AUDIO', payload: false });
+      setIsPlayingAudio(false);
     }
   };
 
   const handleOptionSelect = (id: string) => {
     if (isChecking) return;
     playSfx('click');
-    dispatch({ type: 'SELECT_OPTION', payload: id });
+    setSelectedOption(id);
   };
 
   const handleCheck = async () => {
     if (isBuilder ? builtSentence.length === 0 : !selectedOption) return;
 
-    dispatch({ type: 'START_CHECK' });
+    setIsChecking(true);
     const wordId = currentQuestion.word.id;
     let isCorrect = false;
 
@@ -320,42 +200,51 @@ const LessonView: React.FC<LessonViewProps> = ({ level, onComplete, onExit, word
     }
     
     if (isCorrect) {
-      dispatch({ type: 'SET_FEEDBACK_CORRECT' });
+      setFeedback('correct');
       playSfx('correct');
       const currentMastery = wordMastery[wordId];
       onUpdateMastery(wordId, Math.min((currentMastery?.strength || 0) + 1, 5));
       // Removed automatic audio playback
     } else {
       const answer = isBuilder ? currentQuestion.word.arabic : (isReverse ? currentQuestion.word.arabic : currentQuestion.word.english);
-      dispatch({ type: 'SET_FEEDBACK_INCORRECT', payload: { correctAnswer: answer } });
+      setFeedback('incorrect');
+      setCorrectAnswer(answer);
+      setMistakeShake(true);
       playSfx('incorrect');
-      setTimeout(() => dispatch({ type: 'SET_MISTAKE_SHAKE', payload: false }), 500);
+      setTimeout(() => setMistakeShake(false), 500);
 
       onUpdateMastery(wordId, 0);
       
-      dispatch({ type: 'SET_LOADING_AI', payload: true });
+      setIsLoadingAi(true);
       const explanation = await getGrammarExplanation(
           isBuilder ? `Construct: ${currentQuestion.word.english}` : questionText, 
           isBuilder ? currentQuestion.word.arabic : (isReverse ? currentQuestion.word.arabic : currentQuestion.word.english), 
           isBuilder ? builtSentence.join(' ') : (currentQuestion.options?.find(o => o.id === selectedOption)?.english || ''), 
           isReverse || isBuilder
       );
-      dispatch({ type: 'SET_AI_EXPLANATION', payload: explanation });
-      dispatch({ type: 'SET_LOADING_AI', payload: false });
+      setAiExplanation(explanation);
+      setIsLoadingAi(false);
     }
   };
 
   const handleNext = () => {
-    dispatch({ type: 'RESET_QUESTION' });
+    setFeedback(null);
+    setIsChecking(false);
+    setSelectedOption(null);
+    setCorrectAnswer('');
+    setAiExplanation(null);
+    setBuiltSentence([]);
+    setSentenceTokens([]);
     if (currentQuestionIndex + 1 < questions.length) {
-      dispatch({ type: 'NEXT_QUESTION' });
+      setCurrentQuestionIndex(prev => prev + 1);
     } else {
       onComplete();
     }
   };
 
   const openTutor = (word: ParsedWord) => {
-    dispatch({ type: 'OPEN_TUTOR', payload: word });
+    setIsTutorOpen(true);
+    setTutorWord(word);
   };
 
   const handleBackToLearning = () => {
@@ -363,7 +252,7 @@ const LessonView: React.FC<LessonViewProps> = ({ level, onComplete, onExit, word
     
     // If on completion screen, go back to reviewing words
     if (isCompleted) {
-      dispatch({ type: 'SET_INTRO_STEP', payload: allParsedWords.length - 1 });
+      setIntroStep(allParsedWords.length - 1);
     } else {
       // Otherwise, navigate back to learning dashboard
       navigate('/learning');
