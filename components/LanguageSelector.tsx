@@ -45,10 +45,7 @@ const LanguageSelector: React.FC = () => {
                 language === lang.code ? 'text-duo-green font-bold bg-green-50' : 'text-gray-600'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <span className="text-lg">{lang.flag}</span>
-                <span>{lang.label}</span>
-              </div>
+              <span>{lang.label}</span>
               {language === lang.code && <Check className="w-4 h-4" />}
             </button>
           ))}

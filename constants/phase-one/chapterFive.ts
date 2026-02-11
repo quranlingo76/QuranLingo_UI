@@ -20,10 +20,9 @@ const words: Word[] = [
     id: 'ch5-w1',
     arabic: 'إِنَّ', 
     transliteration: 'Inna', 
-    translations: { 
+    translations: {
       en: 'Verily / Indeed',
       ur: 'بیشک / یقیناً',
-      hi_en: 'Beshak / Zaroor',
       ur_en: 'Beshak / Yaqeenan'
     } 
   },
@@ -31,10 +30,9 @@ const words: Word[] = [
     id: 'ch5-w2',
     arabic: 'أَنَّ', 
     transliteration: 'Anna', 
-    translations: { 
+    translations: {
       en: 'That',
       ur: 'کہ / یہ کہ',
-      hi_en: 'Ke / Yeh ke',
       ur_en: 'Ke / Yeh ke'
     } 
   },
@@ -42,10 +40,9 @@ const words: Word[] = [
     id: 'ch5-w3',
     arabic: 'كَأَنَّ', 
     transliteration: 'Ka\'anna', 
-    translations: { 
+    translations: {
       en: 'As if',
       ur: 'گویا کہ / جیسے کہ',
-      hi_en: 'Jaise ke',
       ur_en: 'Goya ke / Jaise ke'
     } 
   },
@@ -53,10 +50,9 @@ const words: Word[] = [
     id: 'ch5-w4',
     arabic: 'لٰكِنَّ', 
     transliteration: 'Lākinna', 
-    translations: { 
+    translations: {
       en: 'But (indeed)',
       ur: 'لیکن',
-      hi_en: 'Lekin',
       ur_en: 'Lekin'
     } 
   },
@@ -64,10 +60,9 @@ const words: Word[] = [
     id: 'ch5-w5',
     arabic: 'لَعَلَّ', 
     transliteration: 'La\'alla', 
-    translations: { 
+    translations: {
       en: 'Perhaps / So that',
       ur: 'شاید / تاکہ',
-      hi_en: 'Shayad / Taake',
       ur_en: 'Shayad / Taake'
     } 
   },
@@ -75,10 +70,9 @@ const words: Word[] = [
     id: 'ch5-w6',
     arabic: 'لَيْتَ', 
     transliteration: 'Layta', 
-    translations: { 
+    translations: {
       en: 'Would that / I wish',
       ur: 'کاش',
-      hi_en: 'Kaash',
       ur_en: 'Kaash'
     } 
   },
@@ -86,10 +80,9 @@ const words: Word[] = [
     id: 'ch5-w7',
     arabic: 'قَدْ', 
     transliteration: 'Qad', 
-    translations: { 
+    translations: {
       en: 'Indeed / Certainly / Already',
       ur: 'بےشک / یقیناً',
-      hi_en: 'Zaroor / Beshak',
       ur_en: 'Beshak / Yaqeenan'
     } 
   },
@@ -97,10 +90,9 @@ const words: Word[] = [
     id: 'ch5-w8',
     arabic: 'سَـ / سَوْفَ', 
     transliteration: 'Sa / Sawfa', 
-    translations: { 
+    translations: {
       en: 'Will (future)',
       ur: 'عنقریب',
-      hi_en: 'Jald hi',
       ur_en: 'Anqareeb'
     } 
   },
@@ -108,10 +100,9 @@ const words: Word[] = [
     id: 'ch5-w9',
     arabic: 'أَلَا', 
     transliteration: 'Alā', 
-    translations: { 
+    translations: {
       en: 'Lo! / Behold! / Will not?',
       ur: 'خبردار / سنو',
-      hi_en: 'Suno / Khabardar',
       ur_en: 'Khabardar / Suno'
     } 
   },
@@ -119,10 +110,9 @@ const words: Word[] = [
     id: 'ch5-w10',
     arabic: 'إِنَّمَا', 
     transliteration: 'Innamā', 
-    translations: { 
+    translations: {
       en: 'Verily / Only',
       ur: 'سوائے اس کے نہیں / صرف',
-      hi_en: 'Sirf / Bas',
       ur_en: 'Sirf / Mahaz'
     } 
   },
@@ -130,10 +120,9 @@ const words: Word[] = [
     id: 'ch5-w11',
     arabic: 'بَلْ', 
     transliteration: 'Bal', 
-    translations: { 
+    translations: {
       en: 'Rather / Nay',
       ur: 'بلکہ',
-      hi_en: 'Balke',
       ur_en: 'Balke'
     } 
   },
@@ -141,10 +130,9 @@ const words: Word[] = [
     id: 'ch5-w12',
     arabic: 'حَتَّىٰ', 
     transliteration: 'Ḥattā', 
-    translations: { 
+    translations: {
       en: 'Until / Even',
       ur: 'یہاں تک کہ',
-      hi_en: 'Yahan tak ke',
       ur_en: 'Yahan tak ke'
     } 
   }

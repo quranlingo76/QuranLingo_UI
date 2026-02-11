@@ -39,7 +39,7 @@ const PHASE_CONFIG: Record<string, {
     displayTitle: 'Phase 3: Mastery',
     description: 'Complete your Quranic vocabulary journey.',
     comprehension: '85% → 100%',
-    bgColor: 'bg-[#a346ff]',
+    bgColor: 'bg-[var(--color-accent-purple)]',
     Icon: Target
   }
 };

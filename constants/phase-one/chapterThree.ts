@@ -19,10 +19,9 @@ const words: Word[] = [
     id: 'ch3-w1',
     arabic: 'أَ / هَلْ',
     transliteration: 'A / Hal',
-    translations: { 
+    translations: {
       en: 'Is? / Do? (Question tag)',
       ur: 'کیا؟',
-      hi_en: 'Kya?',
       ur_en: 'Kya?'
     }
   },
@@ -30,10 +29,9 @@ const words: Word[] = [
     id: 'ch3-w2',
     arabic: 'مَا / مَاذَا',
     transliteration: 'Mā / Mādhā',
-    translations: { 
+    translations: {
       en: 'What?',
       ur: 'کیا؟',
-      hi_en: 'Kya?',
       ur_en: 'Kya?'
     }
   },
@@ -41,10 +39,9 @@ const words: Word[] = [
     id: 'ch3-w3',
     arabic: 'لِمَ',
     transliteration: 'Lima',
-    translations: { 
+    translations: {
       en: 'Why?',
       ur: 'کیوں؟ (کس لیے)',
-      hi_en: 'Kyun?',
       ur_en: 'Kyun? (Kis liye)'
     }
   },
@@ -52,10 +49,9 @@ const words: Word[] = [
     id: 'ch3-w4',
     arabic: 'مَنْ',
     transliteration: 'Man',
-    translations: { 
+    translations: {
       en: 'Who?',
       ur: 'کون؟ / جس نے',
-      hi_en: 'Kaun? / Jo',
       ur_en: 'Kaun? / Jis ne'
     }
   },
@@ -63,10 +59,9 @@ const words: Word[] = [
     id: 'ch3-w5',
     arabic: 'مَتَىٰ',
     transliteration: 'Matā',
-    translations: { 
+    translations: {
       en: 'When?',
       ur: 'کب؟',
-      hi_en: 'Kab?',
       ur_en: 'Kab?'
     }
   },
@@ -74,10 +69,9 @@ const words: Word[] = [
     id: 'ch3-w6',
     arabic: 'أَيْنَ',
     transliteration: 'Ayna',
-    translations: { 
+    translations: {
       en: 'Where?',
       ur: 'کہاں؟',
-      hi_en: 'Kahan?',
       ur_en: 'Kahan?'
     }
   },
@@ -85,10 +79,9 @@ const words: Word[] = [
     id: 'ch3-w7',
     arabic: 'كَيْفَ',
     transliteration: 'Kayfa',
-    translations: { 
+    translations: {
       en: 'How?',
       ur: 'کیسے؟',
-      hi_en: 'Kaise?',
       ur_en: 'Kaise?'
     }
   },
@@ -96,10 +89,9 @@ const words: Word[] = [
     id: 'ch3-w8',
     arabic: 'كَمْ',
     transliteration: 'Kam',
-    translations: { 
+    translations: {
       en: 'How many/much?',
       ur: 'کتنا / کتنے؟',
-      hi_en: 'Kitna / Kitne?',
       ur_en: 'Kitna / Kitne?'
     }
   },
@@ -107,10 +99,9 @@ const words: Word[] = [
     id: 'ch3-w9',
     arabic: 'أَيُّ',
     transliteration: 'Ayyu',
-    translations: { 
+    translations: {
       en: 'Which?',
       ur: 'کونسا؟',
-      hi_en: 'Kaunsa?',
       ur_en: 'Kaunsa?'
     }
   },
@@ -118,10 +109,9 @@ const words: Word[] = [
     id: 'ch3-w10',
     arabic: 'أَنَّىٰ',
     transliteration: 'Annā',
-    translations: { 
+    translations: {
       en: 'How / From where?',
       ur: 'کیسے / کہاں سے؟',
-      hi_en: 'Kaise / Kahan se?',
       ur_en: 'Kaise / Kahan se?'
     }
   }

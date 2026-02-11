@@ -10,7 +10,6 @@ import { homeFeatures } from '../data/homeFeatures';
 import { homeStats } from '../data/homeStats';
 
 const HomePage: React.FC = () => {
-  console.log("HomePage");
   return (
     <div className="min-h-screen bg-gradient-to-br from-duo-green/10 via-white to-duo-blue/10 relative overflow-hidden">
       {/* Decorative Background Elements */}

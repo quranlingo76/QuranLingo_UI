@@ -184,7 +184,7 @@ const MuallimTutor: React.FC<MuallimTutorProps> = ({ currentWord, isOpen, onClos
                {isLive ? <Wifi className="w-6 h-6 text-white" /> : <Bot className="w-7 h-7 text-white" />}
             </div>
             <div>
-              <h3 className="font-black text-[#4b4b4b] text-xl tracking-tight leading-tight">Muallim AI</h3>
+              <h3 className="font-black text-[var(--color-text-heading)] text-xl tracking-tight leading-tight">Muallim AI</h3>
               <div className="flex items-center gap-1.5">
                 <span className={`w-2 h-2 rounded-full ${isLive ? 'bg-duo-red animate-pulse' : 'bg-duo-green'}`} />
                 <p className="text-[10px] font-black text-duo-gray-dark uppercase tracking-widest">{isLive ? 'Live Connection' : 'Ready to help'}</p>
@@ -214,7 +214,7 @@ const MuallimTutor: React.FC<MuallimTutorProps> = ({ currentWord, isOpen, onClos
                       onClick={() => handleVoiceChange(v.id)}
                       className={`w-full text-left px-4 py-3 hover:bg-duo-blue/10 transition-colors flex flex-col gap-0.5 ${currentVoice === v.id ? 'bg-duo-blue/5 border-l-4 border-duo-blue' : ''}`}
                     >
-                      <span className="text-xs font-black text-[#4b4b4b]">{v.label}</span>
+                      <span className="text-xs font-black text-[var(--color-text-heading)]">{v.label}</span>
                       <span className="text-[10px] text-duo-gray-dark font-bold leading-tight">{v.description}</span>
                     </button>
                   ))}
@@ -234,7 +234,7 @@ const MuallimTutor: React.FC<MuallimTutorProps> = ({ currentWord, isOpen, onClos
             return (
               <div key={idx} className={`flex ${isModel ? 'justify-start' : 'justify-end'} animate-pop`}>
                 <div className="relative max-w-[90%]">
-                   <div className={`px-5 py-3 text-[16px] leading-relaxed border-2 ${isModel ? 'bg-white border-duo-border text-[#4b4b4b] rounded-3xl rounded-tl-none' : 'bg-duo-blue border-duo-blue-dark text-white rounded-3xl rounded-tr-none font-bold shadow-md'}`}>
+                   <div className={`px-5 py-3 text-[16px] leading-relaxed border-2 ${isModel ? 'bg-white border-duo-border text-[var(--color-text-heading)] rounded-3xl rounded-tl-none' : 'bg-duo-blue border-duo-blue-dark text-white rounded-3xl rounded-tr-none font-bold shadow-md'}`}>
                     {msg.text.split('\n').map((line, i) => (
                         <div key={i} className={line.trim().startsWith('-') ? 'pl-4 mb-2 relative before:content-["•"] before:absolute before:left-0 before:text-duo-blue' : 'mb-2 last:mb-0'}>
                             {line}
@@ -268,7 +268,7 @@ const MuallimTutor: React.FC<MuallimTutorProps> = ({ currentWord, isOpen, onClos
         <div className="bg-white border-t-2 border-duo-border pb-10 pt-4 px-6">
            <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
              {SUGGESTIONS.map((s) => (
-               <button key={s.id} onClick={() => handleSendMessage(s.text)} disabled={isLive || isTyping} className="flex-shrink-0 bg-white hover:bg-gray-50 border-2 border-duo-border rounded-2xl px-5 py-3 text-[11px] font-black text-[#4b4b4b] uppercase tracking-widest transition-all active:translate-y-1 shadow-sm flex items-center gap-2">
+               <button key={s.id} onClick={() => handleSendMessage(s.text)} disabled={isLive || isTyping} className="flex-shrink-0 bg-white hover:bg-gray-50 border-2 border-duo-border rounded-2xl px-5 py-3 text-[11px] font-black text-[var(--color-text-heading)] uppercase tracking-widest transition-all active:translate-y-1 shadow-sm flex items-center gap-2">
                  <s.icon className="w-4 h-4 text-duo-blue" /> {s.label}
                </button>
              ))}
@@ -280,7 +280,7 @@ const MuallimTutor: React.FC<MuallimTutorProps> = ({ currentWord, isOpen, onClos
              </button>
              
              <div className="flex-1 bg-gray-100 rounded-3xl flex items-center px-6 py-1 focus-within:ring-2 focus-within:ring-duo-blue focus-within:bg-white transition-all border-2 border-transparent">
-               <input ref={inputRef} type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()} disabled={isLive} placeholder={isLive ? "Listening..." : "Ask Muallim..."} className="flex-1 bg-transparent py-4 focus:outline-none text-lg font-bold text-[#4b4b4b] placeholder-duo-gray-dark" />
+               <input ref={inputRef} type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()} disabled={isLive} placeholder={isLive ? "Listening..." : "Ask Muallim..."} className="flex-1 bg-transparent py-4 focus:outline-none text-lg font-bold text-[var(--color-text-heading)] placeholder-duo-gray-dark" />
                <button onClick={() => handleSendMessage()} disabled={!input.trim() || isLive} className={`ml-4 p-3 rounded-xl transition-all ${input.trim() ? 'bg-duo-blue text-white shadow-md active:scale-90' : 'bg-gray-200 text-gray-400'}`}>
                  <Send className="w-6 h-6" />
                </button>

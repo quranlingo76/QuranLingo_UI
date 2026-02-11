@@ -1,11 +1,14 @@
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useReducer, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, CheckCircle, AlertCircle, Volume2, Sparkles, Loader2, Brain, ArrowRight, Star, Tag, LayoutPanelLeft, Bot, Zap, BookOpen, Bookmark, ArrowLeft, User, Users } from 'lucide-react';
+import { X, CheckCircle, AlertCircle, Volume2, Sparkles, Loader2, Brain, ArrowRight, Star, Tag, LayoutPanelLeft, Bot, Zap, BookOpen, Bookmark, ArrowLeft, User, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { LevelNode, ParsedWord, Question, MasteryData } from '../config/types';
 import { parseWord, shuffleArray } from '../config/utils';
 import { getGrammarExplanation } from '../services/GeminiService';
 import { initializeAudio, playArabicText } from '../services/AudioService';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 import MuallimTutor from './MuallimTutor';
 import LanguageSelector from './LanguageSelector';
@@ -22,72 +25,161 @@ interface LessonViewProps {
 
 type ViewState = 'intro' | 'quiz' | 'summary';
 
+// ── Reducer State & Actions ──────────────────────────────────────────────
+interface LessonState {
+  viewState: ViewState;
+  currentQuestionIndex: number;
+  selectedOption: string | null;
+  sentenceTokens: string[];
+  builtSentence: string[];
+  isChecking: boolean;
+  feedback: 'correct' | 'incorrect' | null;
+  correctAnswer: string;
+  mistakeShake: boolean;
+  aiExplanation: string | null;
+  isLoadingAi: boolean;
+  isTutorOpen: boolean;
+  tutorWord: ParsedWord | null;
+  isPlayingAudio: boolean;
+  introStep: number;
+}
 
+type LessonAction =
+  | { type: 'SET_VIEW_STATE'; payload: ViewState }
+  | { type: 'SET_QUESTION_INDEX'; payload: number }
+  | { type: 'SELECT_OPTION'; payload: string | null }
+  | { type: 'SET_SENTENCE_TOKENS'; payload: string[] }
+  | { type: 'SET_BUILT_SENTENCE'; payload: string[] }
+  | { type: 'ADD_TO_SENTENCE'; payload: string }
+  | { type: 'REMOVE_FROM_SENTENCE'; payload: { index: number; token: string } }
+  | { type: 'ADD_TO_TOKENS'; payload: string }
+  | { type: 'REMOVE_FROM_TOKENS'; payload: { index: number; token: string } }
+  | { type: 'START_CHECK' }
+  | { type: 'SET_FEEDBACK_CORRECT' }
+  | { type: 'SET_FEEDBACK_INCORRECT'; payload: { correctAnswer: string } }
+  | { type: 'SET_MISTAKE_SHAKE'; payload: boolean }
+  | { type: 'SET_AI_EXPLANATION'; payload: string | null }
+  | { type: 'SET_LOADING_AI'; payload: boolean }
+  | { type: 'OPEN_TUTOR'; payload: ParsedWord }
+  | { type: 'CLOSE_TUTOR' }
+  | { type: 'SET_PLAYING_AUDIO'; payload: boolean }
+  | { type: 'SET_INTRO_STEP'; payload: number }
+  | { type: 'INCREMENT_INTRO_STEP' }
+  | { type: 'DECREMENT_INTRO_STEP' }
+  | { type: 'NEXT_QUESTION' }
+  | { type: 'RESET_QUESTION' };
+
+function lessonReducer(state: LessonState, action: LessonAction): LessonState {
+  switch (action.type) {
+    case 'SET_VIEW_STATE':
+      return { ...state, viewState: action.payload };
+    case 'SET_QUESTION_INDEX':
+      return { ...state, currentQuestionIndex: action.payload };
+    case 'SELECT_OPTION':
+      return { ...state, selectedOption: action.payload };
+    case 'SET_SENTENCE_TOKENS':
+      return { ...state, sentenceTokens: action.payload };
+    case 'SET_BUILT_SENTENCE':
+      return { ...state, builtSentence: action.payload };
+    case 'ADD_TO_SENTENCE':
+      return { ...state, builtSentence: [...state.builtSentence, action.payload] };
+    case 'REMOVE_FROM_SENTENCE':
+      return {
+        ...state,
+        builtSentence: state.builtSentence.filter((_, i) => i !== action.payload.index),
+        sentenceTokens: [...state.sentenceTokens, action.payload.token],
+      };
+    case 'ADD_TO_TOKENS':
+      return { ...state, sentenceTokens: [...state.sentenceTokens, action.payload] };
+    case 'REMOVE_FROM_TOKENS':
+      return {
+        ...state,
+        sentenceTokens: state.sentenceTokens.filter((_, i) => i !== action.payload.index),
+        builtSentence: [...state.builtSentence, action.payload.token],
+      };
+    case 'START_CHECK':
+      return { ...state, isChecking: true };
+    case 'SET_FEEDBACK_CORRECT':
+      return { ...state, feedback: 'correct' };
+    case 'SET_FEEDBACK_INCORRECT':
+      return { ...state, feedback: 'incorrect', correctAnswer: action.payload.correctAnswer, mistakeShake: true };
+    case 'SET_MISTAKE_SHAKE':
+      return { ...state, mistakeShake: action.payload };
+    case 'SET_AI_EXPLANATION':
+      return { ...state, aiExplanation: action.payload };
+    case 'SET_LOADING_AI':
+      return { ...state, isLoadingAi: action.payload };
+    case 'OPEN_TUTOR':
+      return { ...state, isTutorOpen: true, tutorWord: action.payload };
+    case 'CLOSE_TUTOR':
+      return { ...state, isTutorOpen: false };
+    case 'SET_PLAYING_AUDIO':
+      return { ...state, isPlayingAudio: action.payload };
+    case 'SET_INTRO_STEP':
+      return { ...state, introStep: action.payload };
+    case 'INCREMENT_INTRO_STEP':
+      return { ...state, introStep: state.introStep + 1 };
+    case 'DECREMENT_INTRO_STEP':
+      return { ...state, introStep: state.introStep - 1 };
+    case 'NEXT_QUESTION':
+      return { ...state, currentQuestionIndex: state.currentQuestionIndex + 1 };
+    case 'RESET_QUESTION':
+      return {
+        ...state,
+        feedback: null,
+        isChecking: false,
+        selectedOption: null,
+        correctAnswer: '',
+        aiExplanation: null,
+        builtSentence: [],
+        sentenceTokens: [],
+      };
+    default:
+      return state;
+  }
+}
+
+function getInitialIntroStep(levelId: string): number {
+  const saved = localStorage.getItem(`lesson_progress_${levelId}`);
+  return saved ? parseInt(saved, 10) : 0;
+}
 
 const LessonView: React.FC<LessonViewProps> = ({ level, onComplete, onExit, wordMastery, onUpdateMastery, onToggleHard }) => {
   const navigate = useNavigate();
   const { language } = useLanguage();
-  const [viewState, setViewState] = useState<ViewState>('intro');
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  
-  const [sentenceTokens, setSentenceTokens] = useState<string[]>([]);
-  const [builtSentence, setBuiltSentence] = useState<string[]>([]);
 
-  const [isChecking, setIsChecking] = useState(false);
-  const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
-  const [correctAnswer, setCorrectAnswer] = useState<string>('');
-  const [mistakeShake, setMistakeShake] = useState(false);
-  
-  const [aiExplanation, setAiExplanation] = useState<string | null>(null);
-  const [isLoadingAi, setIsLoadingAi] = useState(false);
-  const [isTutorOpen, setIsTutorOpen] = useState(false);
-  const [tutorWord, setTutorWord] = useState<ParsedWord | null>(null);
-
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [activeExampleIndex, setActiveExampleIndex] = useState(0);
-  
-  // Carousel Drag State
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [itemsScrollLeft, setItemsScrollLeft] = useState(0);
-
-  // Carousel Mouse Handlers
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!carouselRef.current) return;
-    setIsDragging(true);
-    setStartX(e.pageX - carouselRef.current.offsetLeft);
-    setItemsScrollLeft(carouselRef.current.scrollLeft);
-  };
-
-  const handleMouseLeave = () => {
-    setIsDragging(false);
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || !carouselRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - carouselRef.current.offsetLeft;
-    const walk = (x - startX) * 2; // Scroll-fast multiplier
-    carouselRef.current.scrollLeft = itemsScrollLeft - walk;
-  };
-
-  // Persist Lesson Progress
-  const [introStep, setIntroStep] = useState(() => {
-    const saved = localStorage.getItem(`lesson_progress_${level.id}`);
-    return saved ? parseInt(saved, 10) : 0;
+  const [state, dispatch] = useReducer(lessonReducer, {
+    viewState: 'intro',
+    currentQuestionIndex: 0,
+    selectedOption: null,
+    sentenceTokens: [],
+    builtSentence: [],
+    isChecking: false,
+    feedback: null,
+    correctAnswer: '',
+    mistakeShake: false,
+    aiExplanation: null,
+    isLoadingAi: false,
+    isTutorOpen: false,
+    tutorWord: null,
+    isPlayingAudio: false,
+    introStep: getInitialIntroStep(level.id),
   });
+
+  const {
+    viewState, currentQuestionIndex, selectedOption, sentenceTokens,
+    builtSentence, isChecking, feedback, correctAnswer, mistakeShake,
+    aiExplanation, isLoadingAi, isTutorOpen, tutorWord, isPlayingAudio, introStep,
+  } = state;
+
+  const sliderRef = useRef<Slider>(null);
 
   useEffect(() => {
      if (introStep > 0) {
         localStorage.setItem(`lesson_progress_${level.id}`, introStep.toString());
      }
-     setActiveExampleIndex(0); // Reset carousel
+     // Reset slider to first slide when word changes
+     sliderRef.current?.slickGoTo(0);
   }, [introStep, level.id]);
 
   // Sound Effects Context
@@ -187,35 +279,35 @@ const LessonView: React.FC<LessonViewProps> = ({ level, onComplete, onExit, word
   useEffect(() => {
     if (isBuilder && currentQuestion) {
         const tokens = currentQuestion.word.arabic.split(' ').filter(t => t.trim() !== '');
-        setSentenceTokens(shuffleArray(tokens));
-        setBuiltSentence([]);
+        dispatch({ type: 'SET_SENTENCE_TOKENS', payload: shuffleArray(tokens) });
+        dispatch({ type: 'SET_BUILT_SENTENCE', payload: [] });
     }
   }, [currentQuestionIndex, isBuilder, currentQuestion]);
 
   const handlePlayAudio = async (text: string) => {
     if (!text || isPlayingAudio) return;
     
-    setIsPlayingAudio(true);
+    dispatch({ type: 'SET_PLAYING_AUDIO', payload: true });
     try {
       // Pass the level ID so the audio service knows which folder to look in
       await playArabicText(text, level.id);
-      setIsPlayingAudio(false);
+      dispatch({ type: 'SET_PLAYING_AUDIO', payload: false });
     } catch (e) {
       console.error('Audio playback error:', e);
-      setIsPlayingAudio(false);
+      dispatch({ type: 'SET_PLAYING_AUDIO', payload: false });
     }
   };
 
   const handleOptionSelect = (id: string) => {
     if (isChecking) return;
     playSfx('click');
-    setSelectedOption(id);
+    dispatch({ type: 'SELECT_OPTION', payload: id });
   };
 
   const handleCheck = async () => {
     if (isBuilder ? builtSentence.length === 0 : !selectedOption) return;
 
-    setIsChecking(true);
+    dispatch({ type: 'START_CHECK' });
     const wordId = currentQuestion.word.id;
     let isCorrect = false;
 
@@ -228,54 +320,54 @@ const LessonView: React.FC<LessonViewProps> = ({ level, onComplete, onExit, word
     }
     
     if (isCorrect) {
-      setFeedback('correct');
+      dispatch({ type: 'SET_FEEDBACK_CORRECT' });
       playSfx('correct');
       const currentMastery = wordMastery[wordId];
       onUpdateMastery(wordId, Math.min((currentMastery?.strength || 0) + 1, 5));
       // Removed automatic audio playback
     } else {
-      setFeedback('incorrect');
+      const answer = isBuilder ? currentQuestion.word.arabic : (isReverse ? currentQuestion.word.arabic : currentQuestion.word.english);
+      dispatch({ type: 'SET_FEEDBACK_INCORRECT', payload: { correctAnswer: answer } });
       playSfx('incorrect');
-      setMistakeShake(true);
-      setTimeout(() => setMistakeShake(false), 500);
+      setTimeout(() => dispatch({ type: 'SET_MISTAKE_SHAKE', payload: false }), 500);
 
       onUpdateMastery(wordId, 0);
-      setCorrectAnswer(isBuilder ? currentQuestion.word.arabic : (isReverse ? currentQuestion.word.arabic : currentQuestion.word.english));
       
-      setIsLoadingAi(true);
+      dispatch({ type: 'SET_LOADING_AI', payload: true });
       const explanation = await getGrammarExplanation(
           isBuilder ? `Construct: ${currentQuestion.word.english}` : questionText, 
           isBuilder ? currentQuestion.word.arabic : (isReverse ? currentQuestion.word.arabic : currentQuestion.word.english), 
           isBuilder ? builtSentence.join(' ') : (currentQuestion.options?.find(o => o.id === selectedOption)?.english || ''), 
           isReverse || isBuilder
       );
-      setAiExplanation(explanation);
-      setIsLoadingAi(false);
+      dispatch({ type: 'SET_AI_EXPLANATION', payload: explanation });
+      dispatch({ type: 'SET_LOADING_AI', payload: false });
     }
   };
 
   const handleNext = () => {
-    setFeedback(null);
-    setIsChecking(false);
-    setSelectedOption(null);
-    setCorrectAnswer('');
-    setAiExplanation(null); 
-    setBuiltSentence([]);
-    setSentenceTokens([]);
+    dispatch({ type: 'RESET_QUESTION' });
     if (currentQuestionIndex + 1 < questions.length) {
-      setCurrentQuestionIndex(prev => prev + 1);
+      dispatch({ type: 'NEXT_QUESTION' });
     } else {
       onComplete();
     }
   };
 
   const openTutor = (word: ParsedWord) => {
-    setTutorWord(word);
-    setIsTutorOpen(true);
+    dispatch({ type: 'OPEN_TUTOR', payload: word });
   };
 
   const handleBackToLearning = () => {
-    navigate('/learning');
+    const isCompleted = introStep >= allParsedWords.length;
+    
+    // If on completion screen, go back to reviewing words
+    if (isCompleted) {
+      dispatch({ type: 'SET_INTRO_STEP', payload: allParsedWords.length - 1 });
+    } else {
+      // Otherwise, navigate back to learning dashboard
+      navigate('/learning');
+    }
   };
 
 
@@ -342,7 +434,7 @@ const LessonView: React.FC<LessonViewProps> = ({ level, onComplete, onExit, word
             
              <button 
               onClick={() => setViewState('quiz')}
-              className="w-full max-w-sm py-4 bg-duo-green hover:bg-duo-green-hover text-white rounded-2xl font-bold text-lg shadow-[0_4px_0_0_#46a302] active:shadow-none active:translate-y-[4px] transition-all flex items-center justify-center gap-3"
+              className="w-full max-w-sm py-4 bg-duo-green hover:bg-duo-green-hover text-white rounded-2xl font-bold text-lg shadow-[0_4px_0_0_var(--color-primary-dark)] active:shadow-none active:translate-y-[4px] transition-all flex items-center justify-center gap-3"
             >
               <span>Start Exam</span>
               <ArrowRight className="w-5 h-5" />
@@ -402,22 +494,28 @@ const LessonView: React.FC<LessonViewProps> = ({ level, onComplete, onExit, word
                               <BookOpen className="w-4 h-4 text-duo-blue" />
                               <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Quranic Examples</span>
                            </div>
-                           <div className="w-full relative">
-                              {/* Carousel Container */}
-                              <div 
-                                 ref={carouselRef}
-                                 className={`flex w-full overflow-x-auto pb-2 gap-4 no-scrollbar scroll-smooth 
-                                    ${isDragging ? 'cursor-grabbing snap-none' : 'cursor-grab snap-x snap-mandatory'}`}
-                                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                                 onMouseDown={handleMouseDown}
-                                 onMouseLeave={handleMouseLeave}
-                                 onMouseUp={handleMouseUp}
-                                 onMouseMove={handleMouseMove}
-                                 onScroll={(e) => {
-                                    if (isDragging) return; // Skip index update update while dragging to avoid flicker
-                                    const index = Math.round(e.currentTarget.scrollLeft / e.currentTarget.clientWidth);
-                                    if (index !== activeExampleIndex) setActiveExampleIndex(index);
-                                 }}
+                           <div className="w-full quranic-slider">
+                              <Slider
+                                 ref={sliderRef}
+                                 dots={true}
+                                 fade={true}
+                                 infinite={true}
+                                 speed={500}
+                                 slidesToShow={1}
+                                 slidesToScroll={1}
+                                 waitForAnimate={false}
+                                 arrows={true}
+                                 dotsClass="slick-dots custom-dots"
+                                 prevArrow={
+                                    <button className="slick-prev-custom">
+                                       <ChevronLeft className="w-5 h-5" />
+                                    </button>
+                                 }
+                                 nextArrow={
+                                    <button className="slick-next-custom">
+                                       <ChevronRight className="w-5 h-5" />
+                                    </button>
+                                 }
                               >
                                  {currentWord.examples.map((ex, idx) => {
                                     // Helper function to strip Arabic diacritics for comparison
@@ -425,43 +523,28 @@ const LessonView: React.FC<LessonViewProps> = ({ level, onComplete, onExit, word
                                     const targetBase = stripDiacritics(currentWord.arabic.trim());
                                     
                                     return (
-                                    <div id={`slide-${idx}`} key={idx} className="w-full flex-shrink-0 snap-center bg-blue-50 p-4 rounded-2xl border border-blue-100 hover:border-duo-blue/50 transition-colors">
-                                       <div className="font-arabic text-[28px] font-bold text-gray-800 mb-3 text-right leading-loose" dir="rtl">
-                                          {ex.arabic.split(' ').map((word, wIdx) => {
-                                             const wordBase = stripDiacritics(word);
-                                             const isTarget = wordBase.includes(targetBase) || targetBase.includes(wordBase); 
-                                             return (
-                                                <span key={wIdx} className={isTarget ? "text-duo-green font-bold" : ""}>
-                                                   {word}{" "}
-                                                </span>
-                                             );
-                                          })}
+                                       <div key={idx} className="px-1">
+                                          <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100 hover:border-duo-blue/50 transition-colors">
+                                             <div className="font-arabic text-[28px] font-bold text-gray-800 mb-3 text-right leading-loose" dir="rtl">
+                                                {ex.arabic.split(' ').map((word, wIdx) => {
+                                                   const wordBase = stripDiacritics(word);
+                                                   const isTarget = wordBase.includes(targetBase) || targetBase.includes(wordBase); 
+                                                   return (
+                                                      <span key={wIdx} className={isTarget ? "text-duo-green font-bold" : ""}>
+                                                         {word}{" "}
+                                                      </span>
+                                                   );
+                                                })}
+                                             </div>
+                                             <p className="text-sm text-gray-600 mb-3 leading-relaxed font-medium">{ex.translation}</p>
+                                             <div className="flex justify-end">
+                                                <span className="text-sm font-bold text-duo-blue bg-white border border-blue-100 px-3 py-1 rounded-full shadow-sm">{ex.ref}</span>
+                                             </div>
+                                          </div>
                                        </div>
-                                       <p className="text-sm text-gray-600 mb-3 leading-relaxed font-medium">{ex.translation}</p>
-                                       <div className="flex justify-end">
-                                          <span className="text-sm font-bold text-duo-blue bg-white border border-blue-100 px-3 py-1 rounded-full shadow-sm">{ex.ref}</span>
-                                       </div>
-                                    </div>
-                                 )})}
-                              </div>
-                              
-                              {/* Carousel Navigation */}
-                              <div className="flex w-full justify-center gap-2 mt-3">
-                                {currentWord.examples.map((_, i) => (
-                                  <button 
-                                    key={i} 
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      setActiveExampleIndex(i); // Immediate update for responsiveness
-                                      document.getElementById(`slide-${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                                    }}
-                                    className={`h-2 rounded-full transition-all duration-300 ${
-                                       i === activeExampleIndex ? 'w-6 bg-duo-blue' : 'w-2 bg-gray-200 hover:bg-duo-blue/50'
-                                    }`}
-                                    aria-label={`Go to example ${i + 1}`}
-                                  />
-                                ))}
-                              </div>
+                                    );
+                                 })}
+                              </Slider>
                            </div>
                         </div>
                      )}
@@ -492,7 +575,7 @@ const LessonView: React.FC<LessonViewProps> = ({ level, onComplete, onExit, word
                      playSfx('click'); 
                      setIntroStep(prev => prev + 1);
                    }}
-                   className="flex-1 py-4 bg-duo-blue hover:bg-duo-blue-hover text-white rounded-2xl font-bold text-lg shadow-[0_4px_0_0_#1cb0f6] active:shadow-none active:translate-y-[4px] transition-all flex items-center justify-center gap-3"
+                   className="flex-1 py-4 bg-duo-blue hover:bg-duo-blue-hover text-white rounded-2xl font-bold text-lg shadow-[0_4px_0_0_var(--color-secondary)] active:shadow-none active:translate-y-[4px] transition-all flex items-center justify-center gap-3"
                  >
                    <span>{isLastWord ? 'Finish' : 'Next Word'}</span>
                    <ArrowRight className="w-5 h-5" />
@@ -636,17 +719,17 @@ const LessonView: React.FC<LessonViewProps> = ({ level, onComplete, onExit, word
       </div>
 
       {/* Bottom Feedback Bar */}
-      <div className={`fixed bottom-0 left-0 right-0 p-6 md:p-8 border-t-2 transition-transform duration-300 z-50 ${feedback ? 'translate-y-0' : 'translate-y-[120%]'} ${feedback === 'correct' ? 'bg-[#d7ffb8] border-[#b8f28b]' : (feedback === 'incorrect' ? 'bg-[#ffdfe0] border-[#ffc1c1]' : 'bg-white border-gray-100')}`}>
+      <div className={`fixed bottom-0 left-0 right-0 p-6 md:p-8 border-t-2 transition-transform duration-300 z-50 ${feedback ? 'translate-y-0' : 'translate-y-[120%]'} ${feedback === 'correct' ? 'bg-[var(--color-success-bg)] border-[var(--color-success-border)]' : (feedback === 'incorrect' ? 'bg-[var(--color-danger-bg)] border-[var(--color-danger-border)]' : 'bg-white border-gray-100')}`}>
         <div className="max-w-2xl mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 md:gap-8">
             {feedback === 'correct' && (
-              <div className="flex items-center gap-4 text-[#58a700] animate-pop mb-2 md:mb-0">
+              <div className="flex items-center gap-4 text-[var(--color-primary-text)] animate-pop mb-2 md:mb-0">
                 <div className="bg-white rounded-full p-2 shadow-sm"><CheckCircle className="w-8 h-8 fill-current" /></div>
                 <div>
                   <p className="text-xl md:text-2xl font-bold">Nicely done!</p>
                 </div>
                 <button 
                   onClick={() => handlePlayAudio(currentQuestion.word.arabic)}
-                  className="bg-white/50 hover:bg-white text-[#58a700] p-3 rounded-xl transition-all ml-2 active:scale-95"
+                  className="bg-white/50 hover:bg-white text-[var(--color-primary-text)] p-3 rounded-xl transition-all ml-2 active:scale-95"
                   title="Listen"
                 >
                    <Volume2 className="w-6 h-6" />
@@ -654,19 +737,19 @@ const LessonView: React.FC<LessonViewProps> = ({ level, onComplete, onExit, word
               </div>
             )}
             {feedback === 'incorrect' && (
-              <div className="flex flex-col gap-2 text-[#ea2b2b] animate-pop flex-1 mb-2 md:mb-0">
+              <div className="flex flex-col gap-2 text-[var(--color-danger-dark)] animate-pop flex-1 mb-2 md:mb-0">
                 <div className="flex items-center gap-3">
                    <AlertCircle className="w-6 h-6 fill-current flex-shrink-0" />
                    <span className="font-bold text-lg md:text-xl">Correct Answer:</span>
                    <button 
                       onClick={() => handlePlayAudio(currentQuestion.word.arabic)}
-                      className="bg-red-50 hover:bg-white text-[#ea2b2b] p-2 rounded-lg transition-all active:scale-95"
+                                             className="bg-red-50 hover:bg-white text-[var(--color-danger-dark)] p-2 rounded-lg transition-all active:scale-95"
                       title="Listen"
                    >
                      <Volume2 className="w-5 h-5" />
                    </button>
                 </div>
-                <p className="text-base md:text-lg font-bold text-[#ea2b2b] ml-9 leading-snug break-words">{correctAnswer}</p>
+                <p className="text-base md:text-lg font-bold text-[var(--color-danger-dark)] ml-9 leading-snug break-words">{correctAnswer}</p>
               </div>
             )}
             

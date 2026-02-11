@@ -11,10 +11,9 @@ const words: Word[] = [
     id: 'd7-w1',
     arabic: 'إِلٰه', 
     transliteration: 'Ilāh', 
-    translations: { 
+    translations: {
       en: 'God / Deity',
       ur: 'معبود',
-      hi_en: 'Mabood',
       ur_en: 'Mabood'
     } 
   },
@@ -22,10 +21,9 @@ const words: Word[] = [
     id: 'd7-w2',
     arabic: 'وَاحِد', 
     transliteration: 'Wāḥid', 
-    translations: { 
+    translations: {
       en: 'One',
       ur: 'ایک',
-      hi_en: 'Ek',
       ur_en: 'Aik'
     } 
   },
@@ -33,10 +31,9 @@ const words: Word[] = [
     id: 'd7-w3',
     arabic: 'أَحَد', 
     transliteration: 'Aḥad', 
-    translations: { 
+    translations: {
       en: 'One (Unique)',
       ur: 'ایک (اکیلا)',
-      hi_en: 'Ek (Akela)',
       ur_en: 'Aik (Akela)'
     } 
   },
@@ -44,10 +41,9 @@ const words: Word[] = [
     id: 'd7-w4',
     arabic: 'شَرِيك', 
     transliteration: 'Sharīk', 
-    translations: { 
+    translations: {
       en: 'Partner',
       ur: 'شریک',
-      hi_en: 'Shareek',
       ur_en: 'Shareek'
     } 
   },
@@ -55,10 +51,9 @@ const words: Word[] = [
     id: 'd7-w5',
     arabic: 'غَيْب', 
     transliteration: 'Ghayb', 
-    translations: { 
+    translations: {
       en: 'Unseen',
       ur: 'غیب / چھپا ہوا',
-      hi_en: 'Ghaib',
       ur_en: 'Ghaib'
     } 
   },
@@ -66,10 +61,9 @@ const words: Word[] = [
     id: 'd7-w6',
     arabic: 'شَهَادَة', 
     transliteration: 'Shahādah', 
-    translations: { 
+    translations: {
       en: 'Witnessed (Visible)',
       ur: 'ظاہر / گواہی',
-      hi_en: 'Zaahir / Gawahi',
       ur_en: 'Zaahir / Gawahi'
     } 
   },
@@ -77,10 +71,9 @@ const words: Word[] = [
     id: 'd7-w7',
     arabic: 'عَرْش', 
     transliteration: '\'Arsh', 
-    translations: { 
+    translations: {
       en: 'Throne',
       ur: 'عرش / تخت',
-      hi_en: 'Arsh / Takht',
       ur_en: 'Arsh / Takht'
     } 
   },
@@ -88,10 +81,9 @@ const words: Word[] = [
     id: 'd7-w8',
     arabic: 'كِتَاب', 
     transliteration: 'Kitāb', 
-    translations: { 
+    translations: {
       en: 'Book',
       ur: 'کتاب',
-      hi_en: 'Kitaab',
       ur_en: 'Kitaab'
     } 
   },
@@ -99,10 +91,9 @@ const words: Word[] = [
     id: 'd7-w9',
     arabic: 'كَلِمَة', 
     transliteration: 'Kalimah', 
-    translations: { 
+    translations: {
       en: 'Word',
       ur: 'بات / کلمہ',
-      hi_en: 'Baat / Kalma',
       ur_en: 'Baat / Kalma'
     } 
   },
@@ -110,10 +101,9 @@ const words: Word[] = [
     id: 'd7-w10',
     arabic: 'مَلَك', 
     transliteration: 'Malak', 
-    translations: { 
+    translations: {
       en: 'Angel',
       ur: 'فرشتہ',
-      hi_en: 'Farishta',
       ur_en: 'Farishta'
     } 
   },
@@ -121,10 +111,9 @@ const words: Word[] = [
     id: 'd7-w11',
     arabic: 'عَهْد', 
     transliteration: '\'Ahd', 
-    translations: { 
+    translations: {
       en: 'Covenant',
       ur: 'وعدہ / عہد',
-      hi_en: 'Wada / Ahad',
       ur_en: 'Wadah / Ahad'
     } 
   },
@@ -132,10 +121,9 @@ const words: Word[] = [
     id: 'd7-w12',
     arabic: 'مِيثَاق', 
     transliteration: 'Mīthāq', 
-    translations: { 
+    translations: {
       en: 'Pledge',
       ur: 'پکا وعدہ',
-      hi_en: 'Pakka wada',
       ur_en: 'Pakka wadah'
     } 
   },
@@ -143,10 +131,9 @@ const words: Word[] = [
     id: 'd7-w13',
     arabic: 'إِذْن', 
     transliteration: 'Idhn', 
-    translations: { 
+    translations: {
       en: 'Permission',
       ur: 'اجازت',
-      hi_en: 'Ijazat',
       ur_en: 'Ijazat'
     } 
   },
@@ -154,10 +141,9 @@ const words: Word[] = [
     id: 'd7-w14',
     arabic: 'شَيْطَان', 
     transliteration: 'Shayṭān', 
-    translations: { 
+    translations: {
       en: 'Satan',
       ur: 'شیطان',
-      hi_en: 'Shaitan',
       ur_en: 'Shaitan'
     } 
   },
@@ -165,10 +151,9 @@ const words: Word[] = [
     id: 'd7-w15',
     arabic: 'عَمَل', 
     transliteration: '\'Amal', 
-    translations: { 
+    translations: {
       en: 'Deed / Work',
       ur: 'عمل / کام',
-      hi_en: 'Amal / Kaam',
       ur_en: 'Amal / Kaam'
     } 
   },
@@ -176,10 +161,9 @@ const words: Word[] = [
     id: 'd7-w16',
     arabic: 'حَسَنَة', 
     transliteration: 'Ḥasanah', 
-    translations: { 
+    translations: {
       en: 'Good deed',
       ur: 'نیکی / بھلائی',
-      hi_en: 'Neki / Bhalayi',
       ur_en: 'Neki / Bhalai'
     } 
   },
@@ -187,10 +171,9 @@ const words: Word[] = [
     id: 'd7-w17',
     arabic: 'سَيِّئَة', 
     transliteration: 'Sayyi\'ah', 
-    translations: { 
+    translations: {
       en: 'Bad deed',
       ur: 'برائی / گناہ',
-      hi_en: 'Burayi / Gunah',
       ur_en: 'Burai / Gunah'
     } 
   },
@@ -198,10 +181,9 @@ const words: Word[] = [
     id: 'd7-w18',
     arabic: 'خَيْر', 
     transliteration: 'Khayr', 
-    translations: { 
+    translations: {
       en: 'Good / Better',
       ur: 'بہتر / بھلا',
-      hi_en: 'Behtar / Bhala',
       ur_en: 'Behtar / Bhala'
     } 
   },
@@ -209,10 +191,9 @@ const words: Word[] = [
     id: 'd7-w19',
     arabic: 'شَرّ', 
     transliteration: 'Sharr', 
-    translations: { 
+    translations: {
       en: 'Evil / Worse',
       ur: 'برا / بدتر',
-      hi_en: 'Bura / Badtar',
       ur_en: 'Bura / Badtar'
     } 
   },
@@ -220,10 +201,9 @@ const words: Word[] = [
     id: 'd7-w20',
     arabic: 'إِثْم', 
     transliteration: 'Ithm', 
-    translations: { 
+    translations: {
       en: 'Sin',
       ur: 'گناہ',
-      hi_en: 'Gunah',
       ur_en: 'Gunah'
     } 
   },
@@ -231,10 +211,9 @@ const words: Word[] = [
     id: 'd7-w21',
     arabic: 'ذَنْب', 
     transliteration: 'Dhanb', 
-    translations: { 
+    translations: {
       en: 'Sin/Fault',
       ur: 'گناہ / قصور',
-      hi_en: 'Gunah / Kasoor',
       ur_en: 'Gunah / Qasoor'
     } 
   },
@@ -242,10 +221,9 @@ const words: Word[] = [
     id: 'd7-w22',
     arabic: 'جُنَاح', 
     transliteration: 'Junāḥ', 
-    translations: { 
+    translations: {
       en: 'Blame',
       ur: 'گناہ / مضائقہ',
-      hi_en: 'Harch / Gunah',
       ur_en: 'Gunah / Harj'
     } 
   },
@@ -253,10 +231,9 @@ const words: Word[] = [
     id: 'd7-w23',
     arabic: 'حَرَام', 
     transliteration: 'Ḥarām', 
-    translations: { 
+    translations: {
       en: 'Forbidden',
       ur: 'حرام / منع',
-      hi_en: 'Haram / Mana',
       ur_en: 'Haram'
     } 
   },
@@ -264,10 +241,9 @@ const words: Word[] = [
     id: 'd7-w24',
     arabic: 'حَلَال', 
     transliteration: 'Ḥalāl', 
-    translations: { 
+    translations: {
       en: 'Permissible',
       ur: 'حلال / جائز',
-      hi_en: 'Halal / Jaiz',
       ur_en: 'Halal'
     } 
   },
@@ -275,10 +251,9 @@ const words: Word[] = [
     id: 'd7-w25',
     arabic: 'حَدِيث', 
     transliteration: 'Ḥadīth', 
-    translations: { 
+    translations: {
       en: 'Discourse / Speech',
       ur: 'بات / حدیث',
-      hi_en: 'Baat / Hadees',
       ur_en: 'Baat / Hadees'
     } 
   },
@@ -286,10 +261,9 @@ const words: Word[] = [
     id: 'd7-w26',
     arabic: 'طَيِّب', 
     transliteration: 'Ṭayyib', 
-    translations: { 
+    translations: {
       en: 'Good/Pure',
       ur: 'پاک / اچھا',
-      hi_en: 'Paak / Acha',
       ur_en: 'Paak / Acha'
     } 
   },
@@ -297,10 +271,9 @@ const words: Word[] = [
     id: 'd7-w27',
     arabic: 'أَجْر', 
     transliteration: 'Ajr', 
-    translations: { 
+    translations: {
       en: 'Reward / Wage',
       ur: 'اجر / بدلہ',
-      hi_en: 'Ajar / Badla',
       ur_en: 'Ajar / Badla'
     } 
   },
@@ -308,10 +281,9 @@ const words: Word[] = [
     id: 'd7-w28',
     arabic: 'يَوْم', 
     transliteration: 'Yawm', 
-    translations: { 
+    translations: {
       en: 'Day',
       ur: 'دن',
-      hi_en: 'Din',
       ur_en: 'Din'
     } 
   },
@@ -319,10 +291,9 @@ const words: Word[] = [
     id: 'd7-w29',
     arabic: 'يَوْمَئِذٍ', 
     transliteration: 'Yawma\'idhin', 
-    translations: { 
+    translations: {
       en: 'That Day',
       ur: 'اس دن',
-      hi_en: 'Us din',
       ur_en: 'Us din'
     } 
   },
@@ -330,10 +301,9 @@ const words: Word[] = [
     id: 'd7-w30',
     arabic: 'القِيَامَة', 
     transliteration: 'Al-Qiyāmah', 
-    translations: { 
+    translations: {
       en: 'Resurrection',
       ur: 'قیامت',
-      hi_en: 'Qayamat',
       ur_en: 'Qayamat'
     } 
   },
@@ -341,10 +311,9 @@ const words: Word[] = [
     id: 'd7-w31',
     arabic: 'السَّاعَة', 
     transliteration: 'As-Sā\'ah', 
-    translations: { 
+    translations: {
       en: 'The Hour',
       ur: 'وہ گھڑی (قیامت)',
-      hi_en: 'Ghadi (Qayamat)',
       ur_en: 'Ghadi (Qayamat)'
     } 
   },
@@ -352,10 +321,9 @@ const words: Word[] = [
     id: 'd7-w32',
     arabic: 'أَجَل', 
     transliteration: 'Ajal', 
-    translations: { 
+    translations: {
       en: 'Term / Time limit',
       ur: 'مقررہ وقت / مدت',
-      hi_en: 'Muddat / Waqt',
       ur_en: 'Muddat / Waqt'
     } 
   },
@@ -363,10 +331,9 @@ const words: Word[] = [
     id: 'd7-w33',
     arabic: 'مُسَمًّى', 
     transliteration: 'Musamman', 
-    translations: { 
+    translations: {
       en: 'Specified',
       ur: 'مقرر شدہ',
-      hi_en: 'Muqarrar',
       ur_en: 'Muqarrar'
     } 
   },
@@ -374,10 +341,9 @@ const words: Word[] = [
     id: 'd7-w34',
     arabic: 'حِسَاب', 
     transliteration: 'Ḥisāb', 
-    translations: { 
+    translations: {
       en: 'Account',
       ur: 'حساب',
-      hi_en: 'Hisab',
       ur_en: 'Hisab'
     } 
   },
@@ -385,10 +351,9 @@ const words: Word[] = [
     id: 'd7-w35',
     arabic: 'الآخِرَة', 
     transliteration: 'Al-Ākhirah', 
-    translations: { 
+    translations: {
       en: 'Hereafter',
       ur: 'آخرت',
-      hi_en: 'Aakhirat',
       ur_en: 'Aakhirat'
     } 
   },
@@ -396,10 +361,9 @@ const words: Word[] = [
     id: 'd7-w36',
     arabic: 'أَبَدًا', 
     transliteration: 'Abadan', 
-    translations: { 
+    translations: {
       en: 'Forever',
       ur: 'ہمیشہ / کبھی',
-      hi_en: 'Hamesha / Kabhi',
       ur_en: 'Hamesha / Kabhi'
     } 
   },
@@ -407,10 +371,9 @@ const words: Word[] = [
     id: 'd7-w37',
     arabic: 'عَاقِبَة', 
     transliteration: '\'Āqibah', 
-    translations: { 
+    translations: {
       en: 'End / Outcome',
       ur: 'انجام',
-      hi_en: 'Anjaam',
       ur_en: 'Anjaam'
     } 
   },
@@ -418,10 +381,9 @@ const words: Word[] = [
     id: 'd7-w38',
     arabic: 'جَهَنَّم / نَار', 
     transliteration: 'Jahannam / Nār', 
-    translations: { 
+    translations: {
       en: 'Hell / Fire',
       ur: 'جہنم / آگ',
-      hi_en: 'Jahannum / Aag',
       ur_en: 'Jahannum / Aag'
     } 
   },
@@ -429,10 +391,9 @@ const words: Word[] = [
     id: 'd7-w39',
     arabic: 'وَيْل', 
     transliteration: 'Wayl', 
-    translations: { 
+    translations: {
       en: 'Woe',
       ur: 'بربادی / ہلاکت',
-      hi_en: 'Barbadi',
       ur_en: 'Barbadi / Halakat'
     } 
   },
@@ -440,10 +401,9 @@ const words: Word[] = [
     id: 'd7-w40',
     arabic: 'عِقَاب', 
     transliteration: '\'Iqāb', 
-    translations: { 
+    translations: {
       en: 'Penalty',
       ur: 'سزا / عذاب',
-      hi_en: 'Saza',
       ur_en: 'Saza'
     } 
   },
@@ -451,10 +411,9 @@ const words: Word[] = [
     id: 'd7-w41',
     arabic: 'عَذَاب', 
     transliteration: '\'Adhāb', 
-    translations: { 
+    translations: {
       en: 'Punishment',
       ur: 'عذاب',
-      hi_en: 'Azaab',
       ur_en: 'Azaab'
     } 
   },
@@ -462,10 +421,9 @@ const words: Word[] = [
     id: 'd7-w42',
     arabic: 'أَلِيم', 
     transliteration: 'Alīm', 
-    translations: { 
+    translations: {
       en: 'Painful',
       ur: 'دردناک',
-      hi_en: 'Dardnak',
       ur_en: 'Dardnaak'
     } 
   },
@@ -473,10 +431,9 @@ const words: Word[] = [
     id: 'd7-w43',
     arabic: 'جَزَاء', 
     transliteration: 'Jazā\'', 
-    translations: { 
+    translations: {
       en: 'Recompense',
       ur: 'بدلہ',
-      hi_en: 'Badla',
       ur_en: 'Badla'
     } 
   },
@@ -484,10 +441,9 @@ const words: Word[] = [
     id: 'd7-w44',
     arabic: 'ثَوَاب', 
     transliteration: 'Thawāb', 
-    translations: { 
+    translations: {
       en: 'Reward',
       ur: 'ثواب / بدلہ',
-      hi_en: 'Sawab',
       ur_en: 'Sawab'
     } 
   },
@@ -495,10 +451,9 @@ const words: Word[] = [
     id: 'd7-w45',
     arabic: 'جَنَّة', 
     transliteration: 'Jannah', 
-    translations: { 
+    translations: {
       en: 'Paradise / Garden',
       ur: 'جنت / باغ',
-      hi_en: 'Jannat / Baagh',
       ur_en: 'Jannat / Baagh'
     } 
   }

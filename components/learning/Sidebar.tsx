@@ -30,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
             onClick={() => onTabChange(id)}
             className={`flex items-center gap-4 p-3 rounded-xl font-bold uppercase text-xs border-2 tracking-widest transition-all ${
               activeTab === id
-                ? 'bg-[#ddf4ff] text-duo-blue border-[#84d8ff]'
+                ? 'bg-[var(--color-secondary-light)] text-duo-blue border-[var(--color-secondary-border)]'
                 : 'border-transparent text-gray-400 hover:bg-gray-50'
             }`}
           >

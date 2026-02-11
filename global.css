@@ -1,0 +1,163 @@
+/* ============================================
+   QURANLINGO — Global Design Tokens & Tailwind
+   ============================================
+   This file imports Tailwind CSS and defines all
+   color variables + theme extensions in one place.
+   ============================================ */
+
+@import "tailwindcss";
+
+/* ── Theme Extension (replaces tailwind.config.js) ── */
+@theme {
+  /* Fonts */
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-arabic: 'Amiri', serif;
+  --font-kufic: 'Reem Kufi', sans-serif;
+
+  /* Border Radius */
+  --radius-duo: 16px;
+
+  /* Animations */
+  --animate-shake: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  --animate-pop: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-fade-up: fade-up 0.8s ease-out forwards;
+  --animate-particle: particle-explosion 1s ease-out forwards;
+
+  /* Keyframes */
+  @keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+  @keyframes fade-up {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes particle-explosion {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+  }
+
+  /* ── Custom Colors ── */
+
+  /* Primary (Green — main brand / CTA) */
+  --color-duo-green:      #58cc02;
+  --color-duo-green-dark:  #46a302;
+  --color-duo-green-hover: #4cb802;
+
+  /* Secondary (Blue — interactive / links) */
+  --color-duo-blue:       #1cb0f6;
+  --color-duo-blue-dark:  #1899d6;
+  --color-duo-blue-hover: #1899d6;
+
+  /* Danger (Red) */
+  --color-duo-red:        #ff4b4b;
+  --color-duo-red-dark:   #ea2b2b;
+
+  /* Warning (Yellow) */
+  --color-duo-yellow:      #ffc800;
+  --color-duo-yellow-dark: #e5a400;
+
+  /* Gray / Neutral */
+  --color-duo-gray:       #e5e5e5;
+  --color-duo-gray-dark:  #afafaf;
+  --color-duo-border:     #e5e5e5;
+
+  /* Gold */
+  --color-gold-light:     #FFD700;
+  --color-gold-dark:      #DAA520;
+}
+
+/* ── CSS Custom Properties (used in components via var()) ── */
+:root {
+  /* Primary (Green) */
+  --color-primary:            #58cc02;
+  --color-primary-dark:       #46a302;
+  --color-primary-hover:      #4cb802;
+  --color-primary-text:       #58a700;
+
+  /* Secondary (Blue) */
+  --color-secondary:          #1cb0f6;
+  --color-secondary-dark:     #1899d6;
+  --color-secondary-light:    #ddf4ff;
+  --color-secondary-border:   #84d8ff;
+  --color-secondary-hover:    rgba(28, 176, 246, 0.5);
+
+  /* Accent — Purple */
+  --color-accent-purple:      #a346ff;
+  --color-accent-purple-dark: #8229e2;
+  --color-accent-purple-ring: rgba(163, 70, 255, 0.3);
+
+  /* Accent — Orange */
+  --color-accent-orange:      #ff9600;
+  --color-accent-orange-dark: #e07b00;
+  --color-accent-orange-ring: rgba(255, 150, 0, 0.3);
+
+  /* Accent — Indigo */
+  --color-accent-indigo:      #6366f1;
+  --color-accent-indigo-dark: #4f46e5;
+  --color-accent-indigo-ring: rgba(99, 102, 241, 0.3);
+
+  /* Accent — Teal */
+  --color-accent-teal:        #14b8a6;
+  --color-accent-teal-dark:   #0d9488;
+  --color-accent-teal-ring:   rgba(20, 184, 166, 0.3);
+
+  /* Danger / Error (Red) */
+  --color-danger:             #ff4b4b;
+  --color-danger-dark:        #ea2b2b;
+  --color-danger-bg:          #ffdfe0;
+  --color-danger-border:      #ffc1c1;
+
+  /* Warning (Yellow) */
+  --color-warning:            #ffc800;
+  --color-warning-dark:       #e5a400;
+
+  /* Success / Correct Feedback */
+  --color-success-bg:         #d7ffb8;
+  --color-success-border:     #b8f28b;
+
+  /* Gold (Achievements / Premium) */
+  --color-gold-light:         #FFD700;
+  --color-gold-dark:          #DAA520;
+
+  /* Neutral / Gray */
+  --color-gray:               #e5e5e5;
+  --color-gray-dark:          #afafaf;
+  --color-gray-border:        #e5e7eb;
+  --color-gray-hover:         #d1d5db;
+  --color-gray-bg:            #f9fafb;
+
+  /* Text */
+  --color-text-primary:       #1f2937;
+  --color-text-heading:       #4b4b4b;
+  --color-text-muted:         #afafaf;
+
+  /* Backgrounds */
+  --color-bg-body:            #fdfdfd;
+  --color-bg-pattern:         #fcfcfc;
+
+  /* Scrollbar */
+  --color-scrollbar:          #e5e5e5;
+  --color-scrollbar-hover:    #d1d1d1;
+
+  /* Borders */
+  --color-border:             #e5e5e5;
+
+  /* Quiz Option */
+  --color-quiz-border:        #e5e7eb;
+  --color-quiz-hover-bg:      #f9fafb;
+  --color-quiz-hover-border:  #d1d5db;
+  --color-quiz-selected-bg:   #eff6ff;
+  --color-quiz-selected-text: #0c4a6e;
+
+  /* Shadows */
+  --shadow-btn:               0 4px 0 0;
+  --shadow-arrow:             0 2px 8px rgba(0, 0, 0, 0.15);
+}

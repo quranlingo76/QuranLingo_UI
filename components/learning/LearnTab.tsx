@@ -47,7 +47,7 @@ const LearnTab: React.FC<LearnTabProps> = ({
 
     return (
       <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-0" style={{ height: levelCount * rowH }}>
-        <path d={d} fill="none" stroke="#e5e5e5" strokeWidth="8" strokeLinecap="round" />
+        <path d={d} fill="none" stroke="var(--color-gray)" strokeWidth="8" strokeLinecap="round" />
       </svg>
     );
   };

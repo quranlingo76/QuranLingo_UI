@@ -23,7 +23,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ streak, completedLevelsCount, r
           You
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-[#4b4b4b]">Student of Quran</h2>
+          <h2 className="text-2xl font-bold text-[var(--color-text-heading)]">Student of Quran</h2>
           <p className="text-duo-gray-dark font-medium">Joined 2024</p>
         </div>
       </div>
@@ -32,28 +32,28 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ streak, completedLevelsCount, r
         <div className="border-2 border-gray-100 rounded-2xl p-4 bg-white shadow-sm">
           <div className="flex items-center gap-2 mb-2">
             <Flame className="w-5 h-5 text-duo-yellow" />
-            <span className="font-bold text-[#4b4b4b]">Streak</span>
+            <span className="font-bold text-[var(--color-text-heading)]">Streak</span>
           </div>
           <p className="text-2xl font-bold text-gray-500">{streak}</p>
         </div>
         <div className="border-2 border-gray-100 rounded-2xl p-4 bg-white shadow-sm">
           <div className="flex items-center gap-2 mb-2">
             <Zap className="w-5 h-5 text-duo-blue" />
-            <span className="font-bold text-[#4b4b4b]">Total XP</span>
+            <span className="font-bold text-[var(--color-text-heading)]">Total XP</span>
           </div>
           <p className="text-2xl font-bold text-gray-500">{completedLevelsCount * 15}</p>
         </div>
         <div className="border-2 border-gray-100 rounded-2xl p-4 bg-white shadow-sm">
           <div className="flex items-center gap-2 mb-2">
             <Target className="w-5 h-5 text-duo-green" />
-            <span className="font-bold text-[#4b4b4b]">Words</span>
+            <span className="font-bold text-[var(--color-text-heading)]">Words</span>
           </div>
           <p className="text-2xl font-bold text-gray-500">{reviewStats.totalKnown}</p>
         </div>
         <div className="border-2 border-gray-100 rounded-2xl p-4 bg-white shadow-sm">
           <div className="flex items-center gap-2 mb-2">
-            <ShieldCheck className="w-5 h-5 text-[#a346ff]" />
-            <span className="font-bold text-[#4b4b4b]">Hard Words</span>
+            <ShieldCheck className="w-5 h-5 text-[var(--color-accent-purple)]" />
+            <span className="font-bold text-[var(--color-text-heading)]">Hard Words</span>
           </div>
           <p className="text-2xl font-bold text-gray-500">{reviewStats.hardCount}</p>
         </div>
