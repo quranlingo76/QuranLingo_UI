@@ -9,7 +9,7 @@ interface IntroScreenProps {
 
 const IntroScreen: React.FC<IntroScreenProps> = ({ onStart }) => {
   return (
-    <div className="min-h-screen bg-[#fcfcfc] font-sans selection:bg-duo-green selection:text-white flex flex-col">
+    <div className="min-h-screen bg-[var(--color-bg-pattern)] font-sans selection:bg-duo-green selection:text-white flex flex-col">
       
       {/* Navigation */}
       <nav className="w-full px-6 py-6 flex justify-between items-center max-w-7xl mx-auto z-50 relative">

@@ -16,11 +16,11 @@ const LevelButton: React.FC<LevelButtonProps> = ({ level, isUnlocked, isComplete
   const getColors = (bgClass: string) => {
     if (bgClass.includes('green') || bgClass.includes('emerald')) return { bg: 'bg-duo-green', border: 'border-duo-green-dark', ring: 'ring-duo-green/30' };
     if (bgClass.includes('blue') || bgClass.includes('cyan')) return { bg: 'bg-duo-blue', border: 'border-duo-blue-dark', ring: 'ring-duo-blue/30' };
-    if (bgClass.includes('purple') || bgClass.includes('violet')) return { bg: 'bg-[#a346ff]', border: 'border-[#8229e2]', ring: 'ring-[#a346ff]/30' };
+    if (bgClass.includes('purple') || bgClass.includes('violet')) return { bg: 'bg-[var(--color-accent-purple)]', border: 'border-[var(--color-accent-purple-dark)]', ring: 'ring-[var(--color-accent-purple-ring)]' };
     if (bgClass.includes('rose') || bgClass.includes('red')) return { bg: 'bg-duo-red', border: 'border-duo-red-dark', ring: 'ring-duo-red/30' };
-    if (bgClass.includes('orange')) return { bg: 'bg-[#ff9600]', border: 'border-[#e07b00]', ring: 'ring-[#ff9600]/30' };
-    if (bgClass.includes('indigo')) return { bg: 'bg-[#6366f1]', border: 'border-[#4f46e5]', ring: 'ring-[#6366f1]/30' };
-    if (bgClass.includes('teal')) return { bg: 'bg-[#14b8a6]', border: 'border-[#0d9488]', ring: 'ring-[#14b8a6]/30' };
+    if (bgClass.includes('orange')) return { bg: 'bg-[var(--color-accent-orange)]', border: 'border-[var(--color-accent-orange-dark)]', ring: 'ring-[var(--color-accent-orange-ring)]' };
+    if (bgClass.includes('indigo')) return { bg: 'bg-[var(--color-accent-indigo)]', border: 'border-[var(--color-accent-indigo-dark)]', ring: 'ring-[var(--color-accent-indigo-ring)]' };
+    if (bgClass.includes('teal')) return { bg: 'bg-[var(--color-accent-teal)]', border: 'border-[var(--color-accent-teal-dark)]', ring: 'ring-[var(--color-accent-teal-ring)]' };
     return { bg: 'bg-duo-green', border: 'border-duo-green-dark', ring: 'ring-duo-green/30' };
   };
 
@@ -30,7 +30,7 @@ const LevelButton: React.FC<LevelButtonProps> = ({ level, isUnlocked, isComplete
     <div className="relative flex flex-col items-center group z-10">
       {/* Tooltip for Active Level */}
       {isActive && !isCompleted && (
-        <div className="absolute -top-14 bg-white text-[#4b4b4b] px-4 py-2 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl border-2 border-duo-gray animate-bounce whitespace-nowrap z-20">
+        <div className="absolute -top-14 bg-white text-[var(--color-text-heading)] px-4 py-2 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl border-2 border-duo-gray animate-bounce whitespace-nowrap z-20">
           Start
           <div className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-3 h-3 bg-white border-r-2 border-b-2 border-duo-gray rotate-45" />
         </div>
@@ -60,7 +60,7 @@ const LevelButton: React.FC<LevelButtonProps> = ({ level, isUnlocked, isComplete
         {isUnlocked ? (
            <span className="drop-shadow-sm filter">{level.icon}</span>
         ) : (
-          <Lock className="w-7 h-7 text-[#afafaf]" />
+          <Lock className="w-7 h-7 text-[var(--color-text-muted)]" />
         )}
         
         {/* Glossy Reflection */}
@@ -71,7 +71,7 @@ const LevelButton: React.FC<LevelButtonProps> = ({ level, isUnlocked, isComplete
 
       {/* Title Label */}
       <div className="mt-3 bg-white/90 backdrop-blur-sm px-2 rounded-lg">
-         <p className="font-black text-[#afafaf] text-xs uppercase tracking-wider">{level.title}</p>
+         <p className="font-black text-[var(--color-text-muted)] text-xs uppercase tracking-wider">{level.title}</p>
       </div>
     </div>
   );

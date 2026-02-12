@@ -38,7 +38,7 @@ const SuccessScreen: React.FC<SuccessScreenProps> = ({ comprehensionPercentage, 
           </div>
         </div>
 
-        <h2 className="text-4xl font-kufic font-bold mb-4 text-[#4b4b4b] tracking-tight">
+        <h2 className="text-4xl font-kufic font-bold mb-4 text-[var(--color-text-heading)] tracking-tight">
           Lesson Complete!
         </h2>
         <p className="text-lg font-medium text-gray-500 mb-10">

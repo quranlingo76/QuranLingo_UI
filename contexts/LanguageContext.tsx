@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-export type LanguageCode = 'en' | 'ur' | 'hi_en' | 'ur_en';
+export type LanguageCode = 'en' | 'ur' | 'ur_en';
 
 interface LanguageContextType {
   language: LanguageCode;
@@ -11,7 +11,6 @@ interface LanguageContextType {
 const LANGUAGES = {
   en: 'English',
   ur: 'Urdu',
-  hi_en: 'Hinglish',
   ur_en: 'Roman Urdu'
 };
 
@@ -53,7 +52,6 @@ export const useLanguage = () => {
 export const AVAILABLE_LANGUAGES = [
   { code: 'en', label: 'English', flag: '🇺🇸' },
   { code: 'ur', label: 'Urdu', flag: '🇵🇰' },
-  { code: 'hi_en', label: 'Hinglish', flag: '🇮🇳' },
   { code: 'ur_en', label: 'Roman Urdu', flag: '🇵🇰' }
 ];
 

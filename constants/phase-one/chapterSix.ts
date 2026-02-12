@@ -25,10 +25,9 @@ const words: Word[] = [
     id: 'ch6-w1',
     arabic: 'وَ', 
     transliteration: 'Wa', 
-    translations: { 
+    translations: {
       en: 'And / By (oath)',
       ur: 'اور / قسم ہے',
-      hi_en: 'Aur / Kasam hai',
       ur_en: 'Aur / Qasam hai'
     } 
   },
@@ -36,10 +35,9 @@ const words: Word[] = [
     id: 'ch6-w2',
     arabic: 'فَـ', 
     transliteration: 'Fa', 
-    translations: { 
+    translations: {
       en: 'Then (immediately) / So',
       ur: 'تو / پس',
-      hi_en: 'Toh / Bus',
       ur_en: 'Toh / Pas'
     } 
   },
@@ -47,10 +45,9 @@ const words: Word[] = [
     id: 'ch6-w3',
     arabic: 'ثُمَّ', 
     transliteration: 'Thumma', 
-    translations: { 
+    translations: {
       en: 'Then (after a delay)',
       ur: 'پھر',
-      hi_en: 'Phir',
       ur_en: 'Phir'
     } 
   },
@@ -58,10 +55,9 @@ const words: Word[] = [
     id: 'ch6-w4',
     arabic: 'أَوْ', 
     transliteration: 'Aw', 
-    translations: { 
+    translations: {
       en: 'Or',
       ur: 'یا',
-      hi_en: 'Ya',
       ur_en: 'Ya'
     } 
   },
@@ -69,10 +65,9 @@ const words: Word[] = [
     id: 'ch6-w5',
     arabic: 'أَمْ', 
     transliteration: 'Am', 
-    translations: { 
+    translations: {
       en: 'Or? (in questions)',
       ur: 'یا (سوالیہ)',
-      hi_en: 'Ya (question)',
       ur_en: 'Ya (sawaliya)'
     } 
   },
@@ -80,10 +75,9 @@ const words: Word[] = [
     id: 'ch6-w6',
     arabic: 'لٰكِنْ', 
     transliteration: 'Lākin', 
-    translations: { 
+    translations: {
       en: 'But',
       ur: 'لیکن',
-      hi_en: 'Lekin',
       ur_en: 'Lekin'
     } 
   },
@@ -91,10 +85,9 @@ const words: Word[] = [
     id: 'ch6-w7',
     arabic: 'إِذْ', 
     transliteration: 'Idh', 
-    translations: { 
+    translations: {
       en: 'When (past event)',
       ur: 'جب (ماضی کا واقعہ)',
-      hi_en: 'Jab (past event)',
       ur_en: 'Jab (maazi ka waqia)'
     } 
   },
@@ -102,10 +95,9 @@ const words: Word[] = [
     id: 'ch6-w8',
     arabic: 'إِذَا', 
     transliteration: 'Idhā', 
-    translations: { 
+    translations: {
       en: 'When (future/conditional)',
       ur: 'جب (مستقبل)',
-      hi_en: 'Jab (future)',
       ur_en: 'Jab (mustaqbil)'
     } 
   },
@@ -113,10 +105,9 @@ const words: Word[] = [
     id: 'ch6-w9',
     arabic: 'لَمَّا', 
     transliteration: 'Lammā', 
-    translations: { 
+    translations: {
       en: 'When (past)',
       ur: 'جب (ماضی)',
-      hi_en: 'Jab (past)',
       ur_en: 'Jab (maazi)'
     } 
   },
@@ -124,10 +115,9 @@ const words: Word[] = [
     id: 'ch6-w10',
     arabic: 'لَوْ', 
     transliteration: 'Law', 
-    translations: { 
+    translations: {
       en: 'If (hypothetical)',
       ur: 'اگر / کاش',
-      hi_en: 'Agar / Kaash',
       ur_en: 'Agar / Kaash'
     } 
   },
@@ -135,10 +125,9 @@ const words: Word[] = [
     id: 'ch6-w11',
     arabic: 'إِنْ', 
     transliteration: 'In', 
-    translations: { 
+    translations: {
       en: 'If',
       ur: 'اگر',
-      hi_en: 'Agar',
       ur_en: 'Agar'
     } 
   },
@@ -146,10 +135,9 @@ const words: Word[] = [
     id: 'ch6-w12',
     arabic: 'لَوْلَا', 
     transliteration: 'Lawlā', 
-    translations: { 
+    translations: {
       en: 'If not / Why not',
       ur: 'اگر نہیں / کیوں نہیں',
-      hi_en: 'Agar nahi / Kyun nahi',
       ur_en: 'Agar nahi / Kyun nahi'
     } 
   }

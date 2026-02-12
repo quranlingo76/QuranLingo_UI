@@ -8,7 +8,6 @@ export interface Example {
   translations?: {
     en: string;
     ur?: string;
-    hi_en?: string;
     ur_en?: string;
   };
   ref: string;
@@ -24,7 +23,6 @@ export interface Word {
   translations: {
     en: string;
     ur?: string;     // Urdu
-    hi_en?: string;  // Hinglish
     ur_en?: string;  // Roman Urdu
   };
   examples?: Example[];

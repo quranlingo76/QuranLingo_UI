@@ -19,10 +19,9 @@ const words: Word[] = [
     id: 'ch7-w1',
     arabic: 'مَا', 
     transliteration: 'Mā (Negation)', 
-    translations: { 
+    translations: {
       en: 'Not (negation)',
       ur: 'نہیں (نفی)',
-      hi_en: 'Nahi (negation)',
       ur_en: 'Nahi (nafi)'
     } 
   },
@@ -30,10 +29,9 @@ const words: Word[] = [
     id: 'ch7-w2',
     arabic: 'مَا', 
     transliteration: 'Mā (Question)', 
-    translations: { 
+    translations: {
       en: 'What? (interrogative)',
       ur: 'کیا؟ (سوالیہ)',
-      hi_en: 'Kya? (question)',
       ur_en: 'Kya? (sawaliya)'
     } 
   },
@@ -41,10 +39,9 @@ const words: Word[] = [
     id: 'ch7-w3',
     arabic: 'مَا', 
     transliteration: 'Mā (Relative)', 
-    translations: { 
+    translations: {
       en: 'That which / What',
       ur: 'جو کچھ / وہ جو',
-      hi_en: 'Jo kuch',
       ur_en: 'Jo / Woh jo'
     } 
   },
@@ -52,10 +49,9 @@ const words: Word[] = [
     id: 'ch7-w4',
     arabic: 'مَا', 
     transliteration: 'Mā (Emphasis)', 
-    translations: { 
+    translations: {
       en: 'Indeed / Truly (emphasis)',
       ur: 'واقعی / بالکل',
-      hi_en: 'Bilkul / Sachmuch',
       ur_en: 'Waqai / Bilkul'
     } 
   },
@@ -63,10 +59,9 @@ const words: Word[] = [
     id: 'ch7-w5',
     arabic: 'أَمَّا', 
     transliteration: 'Ammā', 
-    translations: { 
+    translations: {
       en: 'As for',
       ur: 'رہا یہ کہ / بہرحال',
-      hi_en: 'Rahi ye baat / Baherhal',
       ur_en: 'Raha yeh ke'
     } 
   },
@@ -74,10 +69,9 @@ const words: Word[] = [
     id: 'ch7-w6',
     arabic: 'إِمَّا', 
     transliteration: 'Immā', 
-    translations: { 
+    translations: {
       en: 'Either / Or',
       ur: 'یا تو / خواہ',
-      hi_en: 'Ya toh',
       ur_en: 'Ya to'
     } 
   },
@@ -85,10 +79,9 @@ const words: Word[] = [
     id: 'ch7-w7',
     arabic: 'كُلَّمَا', 
     transliteration: 'Kullamā', 
-    translations: { 
+    translations: {
       en: 'Whenever',
       ur: 'جب کبھی',
-      hi_en: 'Jab kabhi',
       ur_en: 'Jab kabhi'
     } 
   },
@@ -96,10 +89,9 @@ const words: Word[] = [
     id: 'ch7-w8',
     arabic: 'بِمَا', 
     transliteration: 'Bimā', 
-    translations: { 
+    translations: {
       en: 'With what',
       ur: 'ساتھ اس کے جو / بدلے اس کے جو',
-      hi_en: 'Isliye jo / Uske badle jo',
       ur_en: 'Uske badle jo'
     } 
   },
@@ -107,10 +99,9 @@ const words: Word[] = [
     id: 'ch7-w9',
     arabic: 'فِيمَا', 
     transliteration: 'Fīmā', 
-    translations: { 
+    translations: {
       en: 'In what',
       ur: 'اس میں جو',
-      hi_en: 'Usmein jo',
       ur_en: 'Us mein jo'
     } 
   },
@@ -118,10 +109,9 @@ const words: Word[] = [
     id: 'ch7-w10',
     arabic: 'مِمَّا', 
     transliteration: 'Mimmā', 
-    translations: { 
+    translations: {
       en: 'From what',
       ur: 'اس سے جو',
-      hi_en: 'Us se jo',
       ur_en: 'Us se jo'
     } 
   },
@@ -129,10 +119,9 @@ const words: Word[] = [
     id: 'ch7-w11',
     arabic: 'عَمَّا', 
     transliteration: '\'Ammā', 
-    translations: { 
+    translations: {
       en: 'About what',
       ur: 'اس سے جو / کس چیز سے',
-      hi_en: 'Us baare mein jo',
       ur_en: 'Us se jo / Kis cheez se'
     } 
   },
@@ -140,10 +129,9 @@ const words: Word[] = [
     id: 'ch7-w12',
     arabic: 'كَمَا', 
     transliteration: 'Kamā', 
-    translations: { 
+    translations: {
       en: 'Just as',
       ur: 'جیسا کہ',
-      hi_en: 'Jaise ke',
       ur_en: 'Jaisa ke'
     } 
   }

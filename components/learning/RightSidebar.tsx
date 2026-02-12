@@ -25,7 +25,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({ reviewLevel, reviewStats, o
             <div className="w-12 h-12 bg-duo-blue rounded-2xl flex items-center justify-center shadow-md">
               <ShieldCheck className="text-white w-6 h-6" />
             </div>
-            <h4 className="font-bold text-[#4b4b4b] uppercase tracking-wide text-sm">Pattern Guard</h4>
+            <h4 className="font-bold text-[var(--color-text-heading)] uppercase tracking-wide text-sm">Pattern Guard</h4>
           </div>
           <p className="text-sm font-medium text-gray-500 mb-6 leading-relaxed">
             Some of your mastered patterns need reinforcement. Protect your long-term memory!
@@ -40,7 +40,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({ reviewLevel, reviewStats, o
       )}
 
       <div className="bg-white border-2 border-gray-100 rounded-3xl p-6 shadow-sm">
-        <h4 className="font-bold text-[#4b4b4b] uppercase tracking-wide text-sm mb-6">Daily Progress</h4>
+        <h4 className="font-bold text-[var(--color-text-heading)] uppercase tracking-wide text-sm mb-6">Daily Progress</h4>
         <div className="space-y-6">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 bg-duo-yellow rounded-xl flex items-center justify-center shadow-sm">
@@ -59,7 +59,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({ reviewLevel, reviewStats, o
             </div>
             <div className="flex-1">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Mastery</p>
-              <p className="text-lg font-bold text-[#4b4b4b]">
+              <p className="text-lg font-bold text-[var(--color-text-heading)]">
                 {reviewStats.longTermCount} / {reviewStats.totalKnown} Words
               </p>
             </div>
