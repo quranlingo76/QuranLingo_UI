@@ -46,15 +46,15 @@
 
   /* ── Custom Colors ── */
 
-  /* Primary (Green — main brand / CTA) */
-  --color-duo-green:      #58cc02;
-  --color-duo-green-dark:  #46a302;
-  --color-duo-green-hover: #4cb802;
+  /* Primary (Gold — main brand / CTA) - Matching "Quran" text #dec078 */
+  --color-duo-green:      #dec078;
+  --color-duo-green-dark:  #c5a866;
+  --color-duo-green-hover: #e8cc8a;
 
-  /* Secondary (Blue — interactive / links) */
-  --color-duo-blue:       #1cb0f6;
-  --color-duo-blue-dark:  #1899d6;
-  --color-duo-blue-hover: #1899d6;
+  /* Secondary (Green — brand accent) - Matching "lingo" text #0a5d4d */
+  --color-duo-blue:       #0a5d4d;
+  --color-duo-blue-dark:  #084a3d;
+  --color-duo-blue-hover: #0d705c;
 
   /* Danger (Red) */
   --color-duo-red:        #ff4b4b;
@@ -76,18 +76,18 @@
 
 /* ── CSS Custom Properties (used in components via var()) ── */
 :root {
-  /* Primary (Green) */
-  --color-primary:            #58cc02;
-  --color-primary-dark:       #46a302;
-  --color-primary-hover:      #4cb802;
-  --color-primary-text:       #58a700;
+  /* Primary (Gold) */
+  --color-primary:            #dec078;
+  --color-primary-dark:       #c5a866;
+  --color-primary-hover:      #e8cc8a;
+  --color-primary-text:       #dec078;
 
-  /* Secondary (Blue) */
-  --color-secondary:          #1cb0f6;
-  --color-secondary-dark:     #1899d6;
-  --color-secondary-light:    #ddf4ff;
-  --color-secondary-border:   #84d8ff;
-  --color-secondary-hover:    rgba(28, 176, 246, 0.5);
+  /* Secondary (Green) */
+  --color-secondary:          #0a5d4d;
+  --color-secondary-dark:     #084a3d;
+  --color-secondary-light:    #e8faf7;
+  --color-secondary-border:   #0d705c;
+  --color-secondary-hover:    rgba(10, 93, 77, 0.5);
 
   /* Accent — Purple */
   --color-accent-purple:      #a346ff;
