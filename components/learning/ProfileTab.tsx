@@ -1,5 +1,7 @@
 import React from 'react';
-import { Flame, Zap, Target, ShieldCheck } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Flame, Zap, Target, ShieldCheck, LogIn, User } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface ReviewStats {
   dueCount: number;
@@ -16,15 +18,47 @@ interface ProfileTabProps {
 }
 
 const ProfileTab: React.FC<ProfileTabProps> = ({ streak, completedLevelsCount, reviewStats }) => {
+  const { isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
+
+  // Not logged in — show login prompt
+  if (!isAuthenticated) {
+    return (
+      <div className="w-full max-w-lg mx-auto animate-pop">
+        <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+          <div className="w-28 h-28 bg-gray-100 rounded-full flex items-center justify-center mb-6 border-4 border-dashed border-gray-200">
+            <User className="w-14 h-14 text-gray-300" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Please login to see your profile</h2>
+          <p className="text-gray-500 text-base mb-8 max-w-sm">
+            Sign in to track your progress, streaks, and learning stats.
+          </p>
+          <button
+            onClick={() => navigate('/auth')}
+            className="px-8 py-4 bg-duo-green hover:bg-duo-green-hover text-white rounded-2xl font-bold text-lg shadow-[0_4px_0_0_var(--color-primary-dark)] active:shadow-none active:translate-y-[4px] transition-all flex items-center gap-3"
+          >
+            <LogIn className="w-5 h-5" />
+            <span>Login / Sign Up</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Logged in — show full profile
+  const initials = user?.name
+    ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    : 'U';
+
   return (
     <div className="w-full max-w-lg mx-auto space-y-8 animate-pop">
       <div className="flex items-center gap-6 mb-8">
-        <div className="w-24 h-24 bg-duo-blue rounded-full border-4 border-dashed border-duo-blue-dark flex items-center justify-center text-4xl font-bold text-white uppercase shadow-lg">
-          You
+        <div className="w-24 h-24 bg-duo-blue rounded-full border-4 border-dashed border-duo-blue-dark flex items-center justify-center text-3xl font-bold text-white uppercase shadow-lg">
+          {initials}
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-[var(--color-text-heading)]">Student of Quran</h2>
-          <p className="text-duo-gray-dark font-medium">Joined 2024</p>
+          <h2 className="text-2xl font-bold text-[var(--color-text-heading)]">{user?.name || 'Student of Quran'}</h2>
+          <p className="text-duo-gray-dark font-medium">{user?.email}</p>
         </div>
       </div>
       
@@ -63,4 +97,3 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ streak, completedLevelsCount, r
 };
 
 export default ProfileTab;
-

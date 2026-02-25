@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { CURRICULUM, SRS_INTERVALS } from '../constants/index';
-import LessonView from '../components/LessonView';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { SRS_INTERVALS } from '../constants/shared';
 import IntroScreen from '../components/IntroScreen';
 import Sidebar from '../components/learning/Sidebar';
 import RightSidebar from '../components/learning/RightSidebar';
@@ -11,67 +10,85 @@ import StatsBar from '../components/learning/StatsBar';
 import LearnTab from '../components/learning/LearnTab';
 import ProfileTab from '../components/learning/ProfileTab';
 import ComingSoonTab from '../components/learning/ComingSoonTab';
+import LessonView from '../components/LessonView';
 import SuccessScreen from '../components/learning/SuccessScreen';
 import LoadingOverlay from '../components/learning/LoadingOverlay';
 import { calculateTotalComprehension, parseWord, shuffleArray } from '../config/utils';
 import { LevelNode, MasteryData } from '../config/types';
 import { generateSentenceExercises } from '../services/GeminiService';
+import { useCurriculum } from '../contexts/CurriculumContext';
+import { useAuth } from '../contexts/AuthContext';
+import { progressApi } from '../services/api';
+import { slugify } from './LessonPage';
 
 const LearningPage: React.FC = () => {
-  const { dayId } = useParams<{ dayId?: string }>();
   const navigate = useNavigate();
-  const [currentView, setCurrentView] = useState<'intro' | 'dashboard' | 'lesson' | 'success'>('dashboard');
+  const { curriculum, isLoading: isCurriculumLoading, fetchChapterWords, error: curriculumError } = useCurriculum();
+  const { isAuthenticated } = useAuth();
+
+  const [currentView, setCurrentView] = useState<'intro' | 'dashboard' | 'review' | 'review-success'>('dashboard');
   const [dashboardTab, setDashboardTab] = useState<'learn' | 'goals' | 'quests' | 'profile'>('learn');
-  const [activeLevel, setActiveLevel] = useState<LevelNode | null>(null);
   const [unlockedLevels, setUnlockedLevels] = useState<string[]>([]);
   const [completedLevels, setCompletedLevels] = useState<string[]>([]);
   const [wordMastery, setWordMastery] = useState<Record<string, MasteryData>>({});
   const [streak, setStreak] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [activeReviewLevel, setActiveReviewLevel] = useState<LevelNode | null>(null);
 
-  // Handle URL day parameter
+  // Load progress from server
   useEffect(() => {
-    if (dayId) {
-      const level = CURRICULUM.find(l => l.id === dayId);
-      if (level) {
-        setCurrentView('dashboard');
-        handleStartLevel(level, true);
+    const loadProgress = async () => {
+      const hasSeenIntro = localStorage.getItem('hasSeenIntro');
+      if (hasSeenIntro) setCurrentView('dashboard');
+
+      if (isAuthenticated) {
+        try {
+          const response = await progressApi.getUserProgress();
+          if (response.success && response.data) {
+            const { completedLevels: cl, wordMastery: wm, streak: s } = response.data;
+            setCompletedLevels(cl || []);
+            setStreak(s || 0);
+
+            if (wm && typeof wm === 'object') {
+              const migrated: Record<string, MasteryData> = {};
+              Object.entries(wm).forEach(([id, val]) => {
+                if (typeof val === 'number') {
+                  migrated[id] = { strength: val, lastTested: Date.now() };
+                } else {
+                  migrated[id] = val as MasteryData;
+                }
+              });
+              setWordMastery(migrated);
+            }
+          }
+        } catch (err: any) {
+          console.warn('Failed to load progress from server:', err.message);
+        }
       }
-    }
-  }, [dayId]);
+    };
 
+    if (!isCurriculumLoading) {
+      loadProgress();
+    }
+  }, [isAuthenticated, isCurriculumLoading]);
+
+  // Compute unlocked levels whenever completedLevels or curriculum changes
   useEffect(() => {
-    const hasSeenIntro = localStorage.getItem('hasSeenIntro');
-    if (hasSeenIntro && !dayId) setCurrentView('dashboard');
+    if (curriculum.length === 0) return;
 
-    const savedCompleted = localStorage.getItem('completedLevels');
-    const savedMastery = localStorage.getItem('wordMastery');
-    const savedStreak = localStorage.getItem('neuralStreak');
-
-    const completed = savedCompleted ? JSON.parse(savedCompleted) : [];
-    setCompletedLevels(completed);
-    if (savedStreak) setStreak(parseInt(savedStreak));
-    
-    // Progressive unlocking: Only unlock first level + all completed levels + next level
     const unlocked: string[] = [];
+    unlocked.push(curriculum[0].id);
     
-    // Always unlock the first level
-    if (CURRICULUM.length > 0) {
-      unlocked.push(CURRICULUM[0].id);
-    }
-    
-    // Unlock all completed levels
-    completed.forEach((levelId: string) => {
+    completedLevels.forEach((levelId: string) => {
       if (!unlocked.includes(levelId)) {
         unlocked.push(levelId);
       }
     });
     
-    // Unlock the next level after the last completed one
-    if (completed.length > 0) {
-      const lastCompletedIndex = CURRICULUM.findIndex(l => l.id === completed[completed.length - 1]);
-      if (lastCompletedIndex !== -1 && lastCompletedIndex + 1 < CURRICULUM.length) {
-        const nextLevel = CURRICULUM[lastCompletedIndex + 1];
+    if (completedLevels.length > 0) {
+      const lastCompletedIndex = curriculum.findIndex(l => l.id === completedLevels[completedLevels.length - 1]);
+      if (lastCompletedIndex !== -1 && lastCompletedIndex + 1 < curriculum.length) {
+        const nextLevel = curriculum[lastCompletedIndex + 1];
         if (!unlocked.includes(nextLevel.id)) {
           unlocked.push(nextLevel.id);
         }
@@ -79,36 +96,28 @@ const LearningPage: React.FC = () => {
     }
     
     setUnlockedLevels(unlocked);
-    
-    if (savedMastery) {
-      try {
-        const parsed = JSON.parse(savedMastery);
-        const migrated: Record<string, MasteryData> = {};
-        Object.entries(parsed).forEach(([id, val]) => {
-           if (typeof val === 'number') {
-             migrated[id] = { strength: val, lastTested: Date.now() };
-           } else {
-             migrated[id] = val as MasteryData;
-           }
-        });
-        setWordMastery(migrated);
-      } catch (e) { console.error("Mastery Load Error", e); }
-    }
-  }, [dayId]);
+  }, [completedLevels, curriculum]);
+
+  // Save progress to server
+  const saveProgressToServer = useCallback(
+    (data: { completedLevels?: string[]; wordMastery?: Record<string, MasteryData>; streak?: number }) => {
+      if (!isAuthenticated) return;
+      const today = new Date().toISOString().split('T')[0];
+      progressApi.saveUserProgress({ ...data, lastActiveDate: today }).catch(err => {
+        console.warn('Failed to save progress to server:', err.message);
+      });
+    },
+    [isAuthenticated]
+  );
 
   const handleUpdateMastery = (wordId: string, newStrength: number) => {
     setWordMastery(prev => {
       const current = prev[wordId] || { strength: 0, lastTested: 0, markedHard: false };
-      
       const updated = { 
         ...prev, 
-        [wordId]: { 
-          ...current,
-          strength: newStrength, 
-          lastTested: Date.now() 
-        } 
+        [wordId]: { ...current, strength: newStrength, lastTested: Date.now() } 
       };
-      localStorage.setItem('wordMastery', JSON.stringify(updated));
+      saveProgressToServer({ wordMastery: updated });
       return updated;
     });
   };
@@ -118,23 +127,16 @@ const LearningPage: React.FC = () => {
       const current = prev[wordId] || { strength: 0, lastTested: Date.now(), markedHard: false };
       const updated = {
         ...prev,
-        [wordId]: {
-          ...current,
-          markedHard: !current.markedHard
-        }
+        [wordId]: { ...current, markedHard: !current.markedHard }
       };
-      localStorage.setItem('wordMastery', JSON.stringify(updated));
+      saveProgressToServer({ wordMastery: updated });
       return updated;
     });
   };
 
   const reviewStats = useMemo(() => {
     const now = Date.now();
-    let dueCount = 0;
-    let weakCount = 0;
-    let totalKnown = 0;
-    let longTermCount = 0;
-    let hardCount = 0;
+    let dueCount = 0, weakCount = 0, totalKnown = 0, longTermCount = 0, hardCount = 0;
 
     (Object.values(wordMastery) as MasteryData[]).forEach(m => {
       totalKnown++;
@@ -149,11 +151,11 @@ const LearningPage: React.FC = () => {
   }, [wordMastery]);
 
   const reviewLevel = useMemo(() => {
-    let candidateWords: string[] = [];
+    let candidateWords: any[] = [];
     const now = Date.now();
 
-    CURRICULUM.forEach(level => {
-      if (unlockedLevels.includes(level.id)) {
+    curriculum.forEach(level => {
+      if (unlockedLevels.includes(level.id) && level.words.length > 0) {
         level.words.forEach(rawWord => {
           const parsed = parseWord(rawWord, 0);
           const mastery = wordMastery[parsed.id];
@@ -183,62 +185,32 @@ const LearningPage: React.FC = () => {
       } as LevelNode;
     }
     return null;
-  }, [unlockedLevels, wordMastery]);
+  }, [unlockedLevels, wordMastery, curriculum]);
 
   const comprehensionPercentage = useMemo(() => {
-    return calculateTotalComprehension(completedLevels, CURRICULUM);
-  }, [completedLevels]);
+    return calculateTotalComprehension(completedLevels, curriculum);
+  }, [completedLevels, curriculum]);
 
   const nextLevelId = useMemo(() => {
-    return CURRICULUM.find(l => !completedLevels.includes(l.id))?.id;
-  }, [completedLevels]);
+    return curriculum.find(l => !completedLevels.includes(l.id))?.id;
+  }, [completedLevels, curriculum]);
 
-  const getHardWordsList = () => {
-    const hardWords: string[] = [];
-    Object.entries(wordMastery).forEach(([id, data]) => {
-      const mastery = data as MasteryData;
-      if (mastery.markedHard || mastery.strength <= 2) {
-        for (const level of CURRICULUM) {
-          const found = level.words.find(w => parseWord(w, 0).id === id);
-          if (found) {
-            hardWords.push(parseWord(found, 0).arabic);
-            break;
-          }
-        }
-      }
-    });
-    return shuffleArray(hardWords).slice(0, 8);
-  };
-
-  const handleStartLevel = async (level: LevelNode, skipNavigation = false) => {
-    if (!skipNavigation && level.id !== 'smart-review') {
-      navigate(`/learning/${level.id}`);
+  /**
+   * Navigate to a chapter's lesson page using slug-based URL
+   * For smart review, handle inline (no separate page needed)
+   */
+  const handleStartLevel = async (level: LevelNode) => {
+    // Smart review stays inline
+    if (level.id === 'smart-review') {
+      setActiveReviewLevel(level);
+      setCurrentView('review');
       return;
     }
 
-    if (level.id === 'p3-chapter-2') {
-      const hardWords = getHardWordsList();
-      
-      if (hardWords.length > 3) {
-        setIsGenerating(true);
-        const generatedSentences = await generateSentenceExercises(hardWords);
-        setIsGenerating(false);
-        
-        if (generatedSentences.length > 0) {
-           const dynamicLevel: LevelNode = {
-             ...level,
-             description: "AI-Generated sentences targeting your hardest words.",
-             words: generatedSentences
-           };
-           setActiveLevel(dynamicLevel);
-           setCurrentView('lesson');
-           return;
-        }
-      }
-    }
-    
-    setActiveLevel(level);
-    setCurrentView('lesson');
+    // Navigate to the dedicated lesson page with readable URL
+    const phaseSlug = slugify(level.section);
+    const chapterSlug = slugify(level.title);
+    navigate(`/learning/${phaseSlug}/${chapterSlug}`);
   };
 
   const handleEnterApp = () => {
@@ -246,16 +218,11 @@ const LearningPage: React.FC = () => {
     setCurrentView('dashboard');
   };
 
-  const handleSuccessContinue = () => {
-    setActiveLevel(null);
-    setCurrentView('dashboard');
-  };
-
   const renderDashboardContent = () => {
     if (dashboardTab === 'learn') {
       return (
         <LearnTab
-          curriculum={CURRICULUM}
+          curriculum={curriculum}
           unlockedLevels={unlockedLevels}
           completedLevels={completedLevels}
           nextLevelId={nextLevelId}
@@ -290,7 +257,26 @@ const LearningPage: React.FC = () => {
                longTermCount={reviewStats.longTermCount}
              />
 
-             {renderDashboardContent()}
+             {isCurriculumLoading ? (
+               <div className="flex flex-col items-center justify-center py-20">
+                 <div className="w-12 h-12 border-4 border-duo-green/30 border-t-duo-green rounded-full animate-spin mb-4" />
+                 <p className="text-gray-500 font-semibold">Loading curriculum from server...</p>
+               </div>
+             ) : curriculumError ? (
+               <div className="flex flex-col items-center justify-center py-20 text-center">
+                 <div className="text-5xl mb-4">⚠️</div>
+                 <p className="text-gray-700 font-bold text-lg mb-2">Could not load curriculum</p>
+                 <p className="text-gray-500 text-sm mb-6 max-w-sm">{curriculumError}</p>
+                 <button
+                   onClick={() => window.location.reload()}
+                   className="px-6 py-3 bg-duo-blue text-white font-bold rounded-xl hover:bg-duo-blue-hover transition-all"
+                 >
+                   Retry
+                 </button>
+               </div>
+             ) : (
+               renderDashboardContent()
+             )}
            </div>
         </main>
 
@@ -311,20 +297,20 @@ const LearningPage: React.FC = () => {
     <div className="bg-white min-h-screen">
        {currentView === 'intro' && <IntroScreen onStart={handleEnterApp} />}
        {currentView === 'dashboard' && renderDashboard()}
-       {currentView === 'lesson' && activeLevel && (
+       {currentView === 'review' && activeReviewLevel && (
          <LessonView 
-            level={activeLevel} 
-            onComplete={() => setCurrentView('success')} 
-            onExit={handleSuccessContinue} 
+            level={activeReviewLevel} 
+            onComplete={() => setCurrentView('review-success')} 
+            onExit={() => { setActiveReviewLevel(null); setCurrentView('dashboard'); }}
             wordMastery={wordMastery} 
             onUpdateMastery={handleUpdateMastery} 
             onToggleHard={handleToggleHard}
          />
        )}
-       {currentView === 'success' && (
+       {currentView === 'review-success' && (
          <SuccessScreen
            comprehensionPercentage={comprehensionPercentage}
-           onContinue={handleSuccessContinue}
+           onContinue={() => { setActiveReviewLevel(null); setCurrentView('dashboard'); }}
          />
        )}
     </div>
@@ -332,4 +318,3 @@ const LearningPage: React.FC = () => {
 };
 
 export default LearningPage;
-
